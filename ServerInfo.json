@@ -1,0 +1,10 @@
+{
+  "Upgrade": true,
+  "LastVersion": "1.9.0",
+  "UpgradeContent": "升级内容：\n1.XXXX\n2.YYYY",
+  "UpgradeZipUrl": "http://localhost:666/sf/4.7.0_test_0928.zip",
+  "UpgradeHashCode": "EB571F0208C9A9C682468F67ABCEB7F1",
+  "ForceUpgrade": true,
+  "SilentUpgrade": false,
+  "UploadFiles": ""
+}

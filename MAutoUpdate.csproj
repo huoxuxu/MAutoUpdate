@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A41F9740-A368-4F0C-91CE-ACF24D0DCA60}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MAutoUpdate</RootNamespace>
+    <AssemblyName>MAutoUpdate</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <PublishUrl>发布\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Costura, Version=1.6.2.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Costura.Fody.1.6.2\lib\portable-net+sl+win+wpa+wp\Costura.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Newtonsoft.Json.13.0.1\lib\net20\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\Microsoft.NET\Framework\v2.0.50727\System.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Commons\AppSettingsTools.cs" />
+    <Compile Include="Commons\BackupHelper.cs" />
+    <Compile Include="Commons\Ext\MyExt.cs" />
+    <Compile Include="Commons\HashHelper.cs" />
+    <Compile Include="Commons\JsonNetHelper.cs" />
+    <Compile Include="Commons\System\ExtensionAttribute.cs" />
+    <Compile Include="Models\AppSettingModel.cs" />
+    <Compile Include="Models\ArgumentModel.cs" />
+    <Compile Include="Commons\CmdArgTools.cs" />
+    <Compile Include="Commons\RegTools.cs" />
+    <Compile Include="Commons\WindowsIdentityTools.cs" />
+    <Compile Include="Models\MainLocalInfo.cs" />
+    <Compile Include="Models\RemoteRespModel.cs" />
+    <Compile Include="Models\UpdateContext.cs" />
+    <Compile Include="Services\UpdateWorkService.cs" />
+    <Compile Include="Commons\LogTool.cs" />
+    <Compile Include="Frm\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Frm\UpdateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm\UpdateForm.Designer.cs">
+      <DependentUpon>UpdateForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Frm\UserControl\YButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Commons\Zip DLL\ComHelper.cs" />
+    <Compile Include="Commons\Zip DLL\CRC32.cs" />
+    <Compile Include="Commons\Zip DLL\Deflate.cs" />
+    <Compile Include="Commons\Zip DLL\DeflateStream.cs" />
+    <Compile Include="Commons\Zip DLL\EncryptionAlgorithm.cs" />
+    <Compile Include="Commons\Zip DLL\Events.cs" />
+    <Compile Include="Commons\Zip DLL\Exceptions.cs" />
+    <Compile Include="Commons\Zip DLL\ExtractExistingFileAction.cs" />
+    <Compile Include="Commons\Zip DLL\FileSelector.cs" />
+    <Compile Include="Commons\Zip DLL\GZipStream.cs" />
+    <Compile Include="Commons\Zip DLL\Inflate.cs" />
+    <Compile Include="Commons\Zip DLL\InfTree.cs" />
+    <Compile Include="Commons\Zip DLL\OffsetStream.cs" />
+    <Compile Include="Commons\Zip DLL\ParallelDeflateOutputStream.cs" />
+    <Compile Include="Commons\Zip DLL\Shared.cs" />
+    <Compile Include="Commons\Zip DLL\Tree.cs" />
+    <Compile Include="Commons\Zip DLL\WinZipAes.cs" />
+    <Compile Include="Commons\Zip DLL\ZipConstants.cs" />
+    <Compile Include="Commons\Zip DLL\ZipCrypto.cs" />
+    <Compile Include="Commons\Zip DLL\ZipDirEntry.cs" />
+    <Compile Include="Commons\Zip DLL\ZipEntry.cs" />
+    <Compile Include="Commons\Zip DLL\ZipEntry.Extract.cs" />
+    <Compile Include="Commons\Zip DLL\ZipEntry.Read.cs" />
+    <Compile Include="Commons\Zip DLL\ZipEntry.Write.cs" />
+    <Compile Include="Commons\Zip DLL\ZipEntrySource.cs" />
+    <Compile Include="Commons\Zip DLL\ZipErrorAction.cs" />
+    <Compile Include="Commons\Zip DLL\ZipFile.AddUpdate.cs" />
+    <Compile Include="Commons\Zip DLL\ZipFile.Check.cs" />
+    <Compile Include="Commons\Zip DLL\ZipFile.cs" />
+    <Compile Include="Commons\Zip DLL\ZipFile.Events.cs" />
+    <Compile Include="Commons\Zip DLL\ZipFile.Extract.cs" />
+    <Compile Include="Commons\Zip DLL\ZipFile.Read.cs" />
+    <Compile Include="Commons\Zip DLL\ZipFile.Save.cs" />
+    <Compile Include="Commons\Zip DLL\ZipFile.SaveSelfExtractor.cs" />
+    <Compile Include="Commons\Zip DLL\ZipFile.Selector.cs" />
+    <Compile Include="Commons\Zip DLL\ZipFile.Static.cs" />
+    <Compile Include="Commons\Zip DLL\ZipFile.x-IEnumerable.cs" />
+    <Compile Include="Commons\Zip DLL\ZipInputStream.cs" />
+    <Compile Include="Commons\Zip DLL\ZipOutputStream.cs" />
+    <Compile Include="Commons\Zip DLL\ZipSegmentedStream.cs" />
+    <Compile Include="Commons\Zip DLL\Zlib.cs" />
+    <Compile Include="Commons\Zip DLL\ZlibBaseStream.cs" />
+    <Compile Include="Commons\Zip DLL\ZlibCodec.cs" />
+    <Compile Include="Commons\Zip DLL\ZlibConstants.cs" />
+    <Compile Include="Commons\Zip DLL\ZlibStream.cs" />
+    <Compile Include="Services\UpgradeService.cs" />
+    <EmbeddedResource Include="Frm\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Frm\UpdateForm.resx">
+      <DependentUpon>UpdateForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="app.manifest" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="Commons\Zip DLL\Migrated rules for Zip DLL.ruleset" />
+    <None Include="ServerInfo.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Commons\Zip DLL\msbuild.flymake.xml" />
+    <Content Include="favicon.ico" />
+    <None Include="FodyWeavers.xml" />
+    <Content Include="readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Commons\Zip DLL\BZip2\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\..\..\packages\Fody.2.0.0\build\portable-net+sl+win+wpa+wp\Fody.targets" Condition="Exists('..\..\..\packages\Fody.2.0.0\build\portable-net+sl+win+wpa+wp\Fody.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\..\packages\Fody.2.0.0\build\portable-net+sl+win+wpa+wp\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Fody.2.0.0\build\portable-net+sl+win+wpa+wp\Fody.targets'))" />
+    <Error Condition="!Exists('..\..\..\packages\Costura.Fody.1.6.2\build\portable-net+sl+win+wpa+wp\Costura.Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Costura.Fody.1.6.2\build\portable-net+sl+win+wpa+wp\Costura.Fody.targets'))" />
+  </Target>
+  <Import Project="..\..\..\packages\Costura.Fody.1.6.2\build\portable-net+sl+win+wpa+wp\Costura.Fody.targets" Condition="Exists('..\..\..\packages\Costura.Fody.1.6.2\build\portable-net+sl+win+wpa+wp\Costura.Fody.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
