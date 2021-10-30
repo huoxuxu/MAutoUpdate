@@ -30,7 +30,8 @@ namespace MAutoUpdate
             try
             {
                 LogTool.AddLog($"开始更新...");
-                #region Mutex
+				
+                #region Mutex 更新程序不能存在多个
                 var fVerInfo = Process.GetCurrentProcess().MainModule.FileVersionInfo;
                 var mutexName = $"{fVerInfo.FileName.Replace("\\", "_").Replace("/", "_")}_{fVerInfo.FileVersion}_Mutex";
                 new Mutex(true, mutexName, out var f);//互斥
