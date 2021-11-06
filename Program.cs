@@ -15,7 +15,7 @@ namespace MAutoUpdate
     static class Program
     {
         /// <summary>
-        /// 程序主入口    MAutoUpdate.exe d:/main.exe
+        /// 程序主入口  MAutoUpdate.exe d:/main.exe
         /// </summary>
         /// <param name="args">
         /// [0]主程序全路径
