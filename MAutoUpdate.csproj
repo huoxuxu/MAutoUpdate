@@ -89,6 +89,12 @@
     <Compile Include="Commons\HashHelper.cs" />
     <Compile Include="Commons\JsonNetHelper.cs" />
     <Compile Include="Commons\System\ExtensionAttribute.cs" />
+    <Compile Include="Frm\FrmAsk.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm\FrmAsk.Designer.cs">
+      <DependentUpon>FrmAsk.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\AppSettingModel.cs" />
     <Compile Include="Models\ArgumentModel.cs" />
     <Compile Include="Commons\CmdArgTools.cs" />
@@ -167,6 +173,9 @@
     <Compile Include="Commons\Zip DLL\ZlibConstants.cs" />
     <Compile Include="Commons\Zip DLL\ZlibStream.cs" />
     <Compile Include="Services\UpgradeService.cs" />
+    <EmbeddedResource Include="Frm\FrmAsk.resx">
+      <DependentUpon>FrmAsk.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Frm\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
