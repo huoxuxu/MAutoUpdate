@@ -1,1 +1,1 @@
-git pull over result = 0 
+git push over result = 0 
