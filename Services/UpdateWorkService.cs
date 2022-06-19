@@ -17,13 +17,13 @@ namespace MAutoUpdate
     /// <summary>更新服务</summary>
     public class UpdateWorkService
     {
-        public UpdateContext context { get; set; }
+        public UpgradeContext context { get; set; }
 
         public delegate void UpdateProgess(double data);
         /// <summary>升级进度</summary>
         public UpdateProgess OnUpdateProgess;
 
-        public UpdateWorkService(UpdateContext context)
+        public UpdateWorkService(UpgradeContext context)
         {
             this.context = context;
         }
@@ -44,43 +44,50 @@ namespace MAutoUpdate
             尝试恢复文件
              */
 
-            var bakPath = context.BakPath;
-            var tempPath = context.TempPath;
+            var bakPath = UpgradeContext.BakPath;
+            var tempPath = UpgradeContext.TempPath;
 
             #region 创建临时目录
-            //创建备份目录信息
-            DirectoryInfo bakinfo = new DirectoryInfo(bakPath);
-            if (!bakinfo.Exists) bakinfo.Create();
-
             //创建临时目录信息
             DirectoryInfo tempinfo = new DirectoryInfo(tempPath);
             if (!tempinfo.Exists) tempinfo.Create();
+
+            //创建备份目录信息
+            DirectoryInfo bakinfo = new DirectoryInfo(bakPath);
+            if (!bakinfo.Exists) bakinfo.Create();
             #endregion
 
-            var resp = context.UpgradeInfo;
+            var upgradeInfo = context.UpgradeInfo;
+            var mainExeFileInfo = new FileInfo(context.MainFullName);
 
-            var zipPath = Path.Combine(tempPath, $"upgrade_{resp.LastVersion}.zip");
+            var zipPath = Path.Combine(tempPath, $"{mainExeFileInfo.Name}_{upgradeInfo.LastVersion}.zip");
+            if (File.Exists(zipPath)) File.Delete(zipPath);
+
             // 下载文件
-            DownLoad(resp.UpgradeZipUrl, zipPath);
+            downLoad(upgradeInfo.UpgradeZipPackageUrl, zipPath);
+
             // 校验Hash
-            if (!HashHelper.ValidateHash(zipPath, resp.UpgradeHashCode))
-            {
+            if (!HashHelper.ValidateHash(zipPath, upgradeInfo.UpgradeZipPackageMD5))
                 throw new Exception($"文件Hash校验失败！");
-            }
 
             // 杀进程
-            var kills = context.KillExeArr;
-            foreach (var kill in kills)
+            var kills = context.UpgradeInfo.KillExeFullNameArr ?? new List<String>();
+            var maxKillCount = 5;
+            int killCount = 0;
+            for (int i = 0; i < maxKillCount; i++)
             {
-                var killProgram = kill?.Trim();
-                if (string.IsNullOrEmpty(killProgram)) continue;
+                killCount = ProcessTools.KillAllProcess(kills.ToArray());
+                if (killCount == 0) break;
 
-                KillProcessExist(killProgram);
+                Thread.Sleep(500);
             }
-            Thread.Sleep(400);
 
-            var mainFile = new FileInfo(context.MainFullName);
-            var path = mainFile.DirectoryName;
+            if (killCount > 0)
+                throw new Exception($"进程自动结束失败，已重试 {maxKillCount} 次。"
+                    + $"请手动结束以下进程：\r\n{kills.Join("\r\n")}");
+
+            var path = mainExeFileInfo.DirectoryName;
+
             // 备份 & 更新
             #region 备份文件
             LogTool.AddLog("更新程序：准备执行备份操作");
@@ -145,14 +152,19 @@ namespace MAutoUpdate
             OnUpdateProgess?.Invoke(98);
             Thread.Sleep(400);
 
-            StartMain(context.MainFullName);
+            // 启动主程序
+            LogTool.AddLog($"更新程序：启动 {context.MainFullName} {context.MainArgs}");
+            Process.Start(context.MainFullName);
+
+            OnUpdateProgess?.Invoke(100);
+
             LogTool.AddLog("更新程序：更新完成！");
         }
 
 
         #region 辅助
         // 下载文件
-        private void DownLoad(string url, string zipPath)
+        private void downLoad(string url, string zipPath)
         {
             using (WebClient web = new WebClient())
             {
@@ -168,15 +180,6 @@ namespace MAutoUpdate
                     throw ex;
                 }
             }
-        }
-
-        // 拉起主程序
-        private void StartMain(string mainPath)
-        {
-            LogTool.AddLog("更新程序：启动 " + mainPath);
-            Process.Start(mainPath);
-
-            OnUpdateProgess?.Invoke(100);
         }
 
         /// <summary>
@@ -216,20 +219,6 @@ namespace MAutoUpdate
                     }
                     File.Copy(file, srcfileName, true);
                 }
-            }
-        }
-
-        /// <summary>
-        /// 杀掉当前运行的程序进程
-        /// </summary>
-        /// <param name="programName">程序名称</param>
-        private void KillProcessExist(string programName)
-        {
-            Process[] processes = Process.GetProcessesByName(programName);
-            foreach (Process p in processes)
-            {
-                p.Kill();
-                p.Close();
             }
         }
         #endregion

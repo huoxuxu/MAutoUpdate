@@ -1,28 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Diagnostics;
-using System.Drawing;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+
+using MAutoUpdate.Models;
 
 namespace MAutoUpdate
 {
     public partial class UpdateForm : Form
     {
+        private UpgradeContext context;
+
         public delegate void UpdateUI(int step);//声明一个更新主线程的委托
         public UpdateUI UpdateUIDelegate;
 
         private UpdateWorkService work;
 
-        public UpdateForm(UpdateWorkService _work)
+        public UpdateForm(UpgradeContext context)
         {
             InitializeComponent();
-            this.lblContent.Text = _work.context.UpgradeInfo.UpgradeContent;
 
-            work = _work;
+            this.context = context;
+            this.work = new UpdateWorkService(this.context);
+
             UpdateUIDelegate = new UpdateUI((obj) =>
             {
                 this.updateBar.Value = obj;
@@ -36,6 +38,8 @@ namespace MAutoUpdate
 
         private void UpdateForm_Load(object sender, EventArgs e)
         {
+            this.lblContent.Text = this.context.UpgradeInfo.UpgradeContent;
+
             ThreadPool.QueueUserWorkItem((obj) =>
             {
                 try
@@ -50,5 +54,7 @@ namespace MAutoUpdate
                 }
             });
         }
+
+
     }
 }

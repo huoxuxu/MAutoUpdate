@@ -41,7 +41,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET20</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>true</UseVSHostingProcess>
@@ -66,6 +66,9 @@
       <HintPath>packages\Costura.Fody.1.6.2\lib\portable-net+sl+win+wpa+wp\Costura.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.4.369, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>packages\ICSharpCode.SharpZipLib.dll.0.85.4.369\lib\net20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.13.0.1\lib\net20\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -83,11 +86,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\HXXLib\HTools\语言扩展\System\ext\System20Ext.cs">
+      <Link>Commons\Ext\System20Ext.cs</Link>
+    </Compile>
     <Compile Include="Commons\AppSettingsTools.cs" />
     <Compile Include="Commons\BackupHelper.cs" />
     <Compile Include="Commons\Ext\MyExt.cs" />
     <Compile Include="Commons\HashHelper.cs" />
     <Compile Include="Commons\JsonNetHelper.cs" />
+    <Compile Include="Commons\ProcessTools.cs" />
     <Compile Include="Commons\System\ExtensionAttribute.cs" />
     <Compile Include="Frm\FrmAsk.cs">
       <SubType>Form</SubType>
@@ -95,14 +102,15 @@
     <Compile Include="Frm\FrmAsk.Designer.cs">
       <DependentUpon>FrmAsk.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\AppSettingModel.cs" />
+    <Compile Include="Models\Cfg\App\AppSettingCfgModel.cs" />
     <Compile Include="Models\ArgumentModel.cs" />
     <Compile Include="Commons\CmdArgTools.cs" />
     <Compile Include="Commons\RegTools.cs" />
     <Compile Include="Commons\WindowsIdentityTools.cs" />
+    <Compile Include="Models\Upgrade\UpgradeModel.cs" />
     <Compile Include="Models\MainLocalInfo.cs" />
     <Compile Include="Models\RemoteRespModel.cs" />
-    <Compile Include="Models\UpdateContext.cs" />
+    <Compile Include="Models\Context\UpdateContext.cs" />
     <Compile Include="Services\UpdateWorkService.cs" />
     <Compile Include="Commons\LogTool.cs" />
     <Compile Include="Frm\MainForm.cs">
@@ -200,13 +208,14 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <None Include="Commons\Zip DLL\Migrated rules for Zip DLL.ruleset" />
-    <None Include="ServerInfo.json">
+    <None Include="Demo\UpgradeModel.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Commons\Zip DLL\msbuild.flymake.xml" />
     <Content Include="favicon.ico" />
+    <Content Include="readme.txt" />
     <None Include="FodyWeavers.xml" />
   </ItemGroup>
   <ItemGroup>

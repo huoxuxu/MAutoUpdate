@@ -30,12 +30,11 @@ namespace MAutoUpdate
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmAsk));
             this.LBTitle = new System.Windows.Forms.Label();
             this.lblContent = new System.Windows.Forms.Label();
             this.btnUpdateNow = new MAutoUpdate.Control.YButton();
             this.btnUpdateLater = new MAutoUpdate.Control.YButton();
-            this.btnIgnore = new MAutoUpdate.Control.YButton();
             this.SuspendLayout();
             // 
             // LBTitle
@@ -44,20 +43,24 @@ namespace MAutoUpdate
             this.LBTitle.BackColor = System.Drawing.Color.Transparent;
             this.LBTitle.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Bold);
             this.LBTitle.ForeColor = System.Drawing.Color.DimGray;
-            this.LBTitle.Location = new System.Drawing.Point(11, 13);
+            this.LBTitle.Location = new System.Drawing.Point(15, 16);
+            this.LBTitle.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LBTitle.Name = "LBTitle";
-            this.LBTitle.Size = new System.Drawing.Size(54, 19);
+            this.LBTitle.Size = new System.Drawing.Size(69, 26);
             this.LBTitle.TabIndex = 22;
             this.LBTitle.Text = "新版本";
             // 
             // lblContent
             // 
-            this.lblContent.Font = new System.Drawing.Font("微软雅黑", 11F);
-            this.lblContent.ForeColor = System.Drawing.Color.DimGray;
-            this.lblContent.Location = new System.Drawing.Point(112, 103);
+            this.lblContent.AutoSize = true;
+            this.lblContent.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblContent.ForeColor = System.Drawing.Color.Black;
+            this.lblContent.Location = new System.Drawing.Point(100, 145);
+            this.lblContent.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblContent.Name = "lblContent";
-            this.lblContent.Size = new System.Drawing.Size(358, 159);
+            this.lblContent.Size = new System.Drawing.Size(384, 27);
             this.lblContent.TabIndex = 24;
+            this.lblContent.Text = "XX正在运行，请问是否关闭XX立即升级？";
             // 
             // btnUpdateNow
             // 
@@ -67,13 +70,14 @@ namespace MAutoUpdate
             this.btnUpdateNow.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.btnUpdateNow.IsColorChange = true;
             this.btnUpdateNow.IsFontChange = false;
-            this.btnUpdateNow.Location = new System.Drawing.Point(390, 332);
+            this.btnUpdateNow.Location = new System.Drawing.Point(270, 245);
+            this.btnUpdateNow.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.btnUpdateNow.MoveColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(173)))), ((int)(((byte)(25)))));
             this.btnUpdateNow.MoveFontColor = System.Drawing.Color.White;
             this.btnUpdateNow.Name = "btnUpdateNow";
             this.btnUpdateNow.NormalColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(173)))), ((int)(((byte)(25)))));
             this.btnUpdateNow.NormalFontColor = System.Drawing.Color.White;
-            this.btnUpdateNow.Size = new System.Drawing.Size(141, 45);
+            this.btnUpdateNow.Size = new System.Drawing.Size(188, 56);
             this.btnUpdateNow.TabIndex = 27;
             this.btnUpdateNow.Text = "立即更新";
             this.btnUpdateNow.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -87,54 +91,35 @@ namespace MAutoUpdate
             this.btnUpdateLater.ForeColor = System.Drawing.Color.Black;
             this.btnUpdateLater.IsColorChange = true;
             this.btnUpdateLater.IsFontChange = false;
-            this.btnUpdateLater.Location = new System.Drawing.Point(232, 332);
+            this.btnUpdateLater.Location = new System.Drawing.Point(480, 245);
+            this.btnUpdateLater.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.btnUpdateLater.MoveColor = System.Drawing.Color.White;
             this.btnUpdateLater.MoveFontColor = System.Drawing.Color.Black;
             this.btnUpdateLater.Name = "btnUpdateLater";
             this.btnUpdateLater.NormalColor = System.Drawing.Color.White;
             this.btnUpdateLater.NormalFontColor = System.Drawing.Color.Black;
-            this.btnUpdateLater.Size = new System.Drawing.Size(141, 45);
+            this.btnUpdateLater.Size = new System.Drawing.Size(188, 56);
             this.btnUpdateLater.TabIndex = 26;
             this.btnUpdateLater.Text = "以后提醒我";
             this.btnUpdateLater.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.btnUpdateLater.Click += new System.EventHandler(this.btnUpdateLater_Click);
             // 
-            // btnIgnore
+            // FrmAsk
             // 
-            this.btnIgnore.BackColor = System.Drawing.Color.White;
-            this.btnIgnore.EnterImage = null;
-            this.btnIgnore.Font = new System.Drawing.Font("微软雅黑", 10F);
-            this.btnIgnore.ForeColor = System.Drawing.Color.Black;
-            this.btnIgnore.IsColorChange = true;
-            this.btnIgnore.IsFontChange = false;
-            this.btnIgnore.Location = new System.Drawing.Point(76, 332);
-            this.btnIgnore.MoveColor = System.Drawing.Color.White;
-            this.btnIgnore.MoveFontColor = System.Drawing.Color.Black;
-            this.btnIgnore.Name = "btnIgnore";
-            this.btnIgnore.NormalColor = System.Drawing.Color.White;
-            this.btnIgnore.NormalFontColor = System.Drawing.Color.Black;
-            this.btnIgnore.Size = new System.Drawing.Size(141, 45);
-            this.btnIgnore.TabIndex = 25;
-            this.btnIgnore.Text = "忽略这次更新";
-            this.btnIgnore.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnIgnore.Click += new System.EventHandler(this.btnIgnore_Click);
-            // 
-            // MainForm
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.ClientSize = new System.Drawing.Size(600, 420);
+            this.ClientSize = new System.Drawing.Size(760, 360);
             this.Controls.Add(this.btnUpdateNow);
             this.Controls.Add(this.btnUpdateLater);
-            this.Controls.Add(this.btnIgnore);
             this.Controls.Add(this.lblContent);
             this.Controls.Add(this.LBTitle);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "MainForm";
+            this.Margin = new System.Windows.Forms.Padding(4);
+            this.Name = "FrmAsk";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MainForm";
             this.TopMost = true;
@@ -147,7 +132,6 @@ namespace MAutoUpdate
         #endregion
         private System.Windows.Forms.Label LBTitle;
         private System.Windows.Forms.Label lblContent;
-        private YButton btnIgnore;
         private YButton btnUpdateLater;
         private YButton btnUpdateNow;
     }

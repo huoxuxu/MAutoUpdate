@@ -1,33 +1,23 @@
-﻿using Ionic.Zip;
-using MAutoUpdate.Models;
-using MAutoUpdate.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.IO.Compression;
-using System.Net;
-using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
+using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using System.Xml;
+
+using MAutoUpdate.Models;
 
 namespace MAutoUpdate
 {
     public partial class FrmAsk : Form
     {
-        private UpdateWorkService work;
+        private UpgradeContext context;
 
-        public FrmAsk(UpdateWorkService work)
+        public FrmAsk(UpgradeContext context)
         {
             InitializeComponent();
 
-            this.work = work;
-            this.lblContent.Text = work.context.UpgradeInfo.UpgradeContent;
+            this.context = context;
         }
 
         #region 让窗体变成可移动
@@ -82,26 +72,12 @@ namespace MAutoUpdate
         {
             this.Hide();// 隐藏当前窗口
 
-            UpdateForm updateForm = new UpdateForm(this.work);
+            UpdateForm updateForm = new UpdateForm(this.context);
             if (updateForm.ShowDialog() == DialogResult.OK)
             {
                 Application.Exit();
             }
         }
-
-        /// <summary>
-        /// 忽略
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnIgnore_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
-
-        #region 辅助
-        #endregion
 
 
     }

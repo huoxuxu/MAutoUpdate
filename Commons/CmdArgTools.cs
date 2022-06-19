@@ -4,34 +4,40 @@ using System.Text;
 
 namespace MAutoUpdate.Commons
 {
+    /// <summary></summary>
     public class CmdArgTools
     {
+        /// <summary>
+        /// 处理启动参数
+        /// </summary>
+        /// <param name="args">-main d:/main.exe -upgrade d:/upgrade.json</param>
+        /// <returns></returns>
         public static ArgumentModel GetArgumentModel(string[] args)
         {
             var argModel = new ArgumentModel();
             if (args == null || args.Length == 0) return null;
 
-            string programName = args[0];
-            if (string.IsNullOrEmpty(programName)) return argModel;
+            var data = args.Chunk(2);
+            foreach (var item in data)
+            {
+                if (item.Count != 2) continue;
 
-            argModel.Programs = programName.Trim();
+                var key = item[0].Trim();
+                var val = item[1].Trim();
 
-            var programArr = argModel.Programs.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            argModel.ProgramNames.AddRange(programArr);
-            // 处理主程序
-            argModel.MainProgram = programArr[0]?.Trim();
-
-            //if (args.Length > 1)
-            //{
-            //    argModel.SilentUpdate = "1".Equals((args[1] + "").Trim());
-
-            //    if (args.Length > 2)
-            //    {
-            //        argModel.IsClickUpdate = "1".Equals((args[2] + "").Trim());
-            //    }
-            //}
+                if (key.EqualIgnoreCase("-main"))
+                {
+                    argModel.MainExeFullName = val;
+                }
+                else if (key.EqualIgnoreCase("-upgrade"))
+                {
+                    argModel.UpgradeJsonFullName = val;
+                }
+            }
 
             return argModel;
         }
+
+
     }
 }

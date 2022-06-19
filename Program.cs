@@ -9,17 +9,17 @@ using System.Xml;
 using MAutoUpdate.Commons;
 using MAutoUpdate.Models;
 using MAutoUpdate.Services;
+using MAutoUpdate.Models.Upgrade;
 
 namespace MAutoUpdate
 {
     static class Program
     {
         /// <summary>
-        /// 程序主入口  MAutoUpdate.exe d:/main.exe
+        /// 程序主入口
+        /// 启动命令：MAutoUpdate.exe -main d:/main.exe -upgrade d:/upgrade.json
         /// </summary>
-        /// <param name="args">
-        /// [0]主程序全路径
-        /// </param>
+        /// <param name="args">-main d:/main.exe -upgrade d:/upgrade.json</param>
         [STAThread]
         static void Main(string[] args)
         {
@@ -30,7 +30,7 @@ namespace MAutoUpdate
             try
             {
                 LogTool.AddLog($"开始更新...");
-				
+
                 #region Mutex 更新程序不能存在多个
                 var fVerInfo = Process.GetCurrentProcess().MainModule.FileVersionInfo;
                 var mutexName = $"{fVerInfo.FileName.Replace("\\", "_").Replace("/", "_")}_{fVerInfo.FileVersion}_Mutex";
@@ -38,43 +38,39 @@ namespace MAutoUpdate
                 if (!f) return;
                 #endregion
 
-                UpdateContext context = new UpdateContext();
+                // 更新上下文
+                UpgradeContext context = new UpgradeContext()
+                {
+                    IsAdmin = WindowsIdentityTools.IsAdmin(),
+                };
 
                 #region 处理命令行参数和配置文件
-                var asModel = AppSettingsTools.Get<AppSettingModel>();
+                var asModel = AppSettingsTools.Get<AppSettingCfgModel>();
                 context.Init(asModel);
 
                 ArgumentModel argModel = CmdArgTools.GetArgumentModel(args);
-                if (argModel != null && !string.IsNullOrEmpty(argModel.Programs))
+                if (argModel != null)
                 {
                     context.Init(argModel);
                 }
 
-                if (string.IsNullOrEmpty(context.MainFullName))
-                {
-                    throw new Exception($"主程序路径未指定！");
-                }
-                if (!File.Exists(context.MainFullName))
-                {
-                    throw new Exception($"主程序路径不存在！");
-                }
+                if (string.IsNullOrEmpty(context.MainFullName)) throw new Exception($"主程序路径未指定！");
+                if (!File.Exists(context.MainFullName)) throw new Exception($"主程序路径不存在！");
 
-
-                LogTool.AddLog(JsonNetHelper.SerializeObject(context));
+                LogTool.AddLog($"context:{JsonNetHelper.SerializeObject(context)}");
                 #endregion
 
-                var resp = UpgradeService.GetUpgrade(context);
-                context.UpgradeInfo = resp;
+                // 解析升级Json
+                var json = File.ReadAllText(argModel.UpgradeJsonFullName);
+                context.UpgradeInfo = JsonNetHelper.DeserializeObject<UpgradeModel>(json);
 
-                if (!resp.Upgrade)
-                {
-                    // 拉起主程序
-                    Process.Start(context.MainFullName);
-                    MessageBox.Show($"无需更新！");
-                    return;
-                }
-
-                UpdateWorkService updateWork = new UpdateWorkService(context);
+                //if (!resp.Upgrade)
+                //{
+                //    // 拉起主程序
+                //    Process.Start(context.MainFullName);
+                //    MessageBox.Show($"无需更新！");
+                //    return;
+                //}
 
                 /* 
                  * 当前用户是管理员的时候，直接启动应用程序
@@ -84,52 +80,40 @@ namespace MAutoUpdate
                 Application.EnableVisualStyles();
 
                 //判断当前登录用户是否为管理员
-                context.IsAdmin = WindowsIdentityTools.IsAdmin();
                 if (!context.IsAdmin)
                 {
                     #region 非管理员，且更新C盘文件
                     // 如果更新C盘文件
                     string result = Environment.GetEnvironmentVariable("systemdrive");
-                    if (AppDomain.CurrentDomain.BaseDirectory.Contains(result))
+                    if (context.MainFullName.StartsWithIgnoreCase(result))
                     {
-                        //创建启动对象 
-                        ProcessStartInfo startInfo = new ProcessStartInfo
-                        {
-                            //设置运行文件 
-                            FileName = System.Windows.Forms.Application.ExecutablePath,
-                            //设置启动动作,确保以管理员身份运行 
-                            Verb = "runas",
-
-                            Arguments = " " + argModel.Programs
-                        };
-                        //如果不是管理员，则启动UAC 
-                        System.Diagnostics.Process.Start(startInfo);
+                        ProcessTools.RestartWithUAC(argModel.GetStartupArgs());
                         return;
                     }
                     #endregion
                 }
 
-                // 静默更新
-                if (resp.SilentUpgrade)
-                {
-                    updateWork.Do();
-                    return;
-                }
+                //// 静默更新
+                //if (resp.SilentUpgrade)
+                //{
+                //    updateWork.Do();
+                //    return;
+                //}
 
-                // 强制更新
-                if (resp.ForceUpgrade)
-                {
-                    UpdateForm updateForm = new UpdateForm(updateWork);
-                    if (updateForm.ShowDialog() == DialogResult.OK)
-                    {
-                        Application.Exit();
-                        return;
-                    }
-                }
+                //// 强制更新
+                //if (resp.ForceUpgrade)
+                //{
+                //    UpdateForm updateForm = new UpdateForm(updateWork);
+                //    if (updateForm.ShowDialog() == DialogResult.OK)
+                //    {
+                //        Application.Exit();
+                //        return;
+                //    }
+                //}
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new MainForm(updateWork));
+                Application.Run(new MainForm(context));
 
             }
             catch (Exception ex)
@@ -137,7 +121,6 @@ namespace MAutoUpdate
                 LogTool.AddLog(ex + "");
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)

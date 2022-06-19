@@ -4,8 +4,11 @@ using System.Text;
 
 namespace MAutoUpdate.Commons
 {
+    /// <summary></summary>
     public class WindowsIdentityTools
     {
+        /// <summary>是否管理员权限运行</summary>
+        /// <returns></returns>
         public static bool IsAdmin()
         {
             System.Security.Principal.WindowsIdentity identity = System.Security.Principal.WindowsIdentity.GetCurrent();

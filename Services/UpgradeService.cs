@@ -17,7 +17,7 @@ namespace MAutoUpdate.Services
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        public static RemoteRespModel GetUpgrade(UpdateContext context)
+        public static RemoteRespModel GetUpgrade(UpgradeContext context)
         {
             try
             {

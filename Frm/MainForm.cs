@@ -1,34 +1,33 @@
-﻿using Ionic.Zip;
-using MAutoUpdate.Models;
-using MAutoUpdate.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing;
-using System.IO;
-using System.IO.Compression;
-using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using System.Xml;
+
+using MAutoUpdate.Models;
 
 namespace MAutoUpdate
 {
     public partial class MainForm : Form
     {
-        private UpdateWorkService work;
+        #region 初始化
+        private UpgradeContext context;
 
-        public MainForm(UpdateWorkService work)
+        public MainForm(UpgradeContext context)
         {
             InitializeComponent();
 
-            this.work = work;
-            this.lblContent.Text = work.context.UpgradeInfo.UpgradeContent;
+            this.context = context;
         }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            this.lblContent.Text = this.context.UpgradeInfo.UpgradeContent;
+        }
+        #endregion
 
         #region 让窗体变成可移动
         [DllImport("user32.dll")]
@@ -64,17 +63,7 @@ namespace MAutoUpdate
         #endregion
 
         /// <summary>
-        /// 稍后更新,则将更新程序关闭
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnUpdateLater_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
-        /// <summary>
-        /// 开始升级
+        /// 立即升级
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -82,11 +71,21 @@ namespace MAutoUpdate
         {
             this.Hide();// 隐藏当前窗口
 
-            UpdateForm updateForm = new UpdateForm(this.work);
+            UpdateForm updateForm = new UpdateForm(this.context);
             if (updateForm.ShowDialog() == DialogResult.OK)
             {
                 Application.Exit();
             }
+        }
+
+        /// <summary>
+        /// 稍后更新,则将更新程序关闭
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnUpdateLater_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
 
         /// <summary>
@@ -102,7 +101,6 @@ namespace MAutoUpdate
 
         #region 辅助
         #endregion
-
 
     }
 }
