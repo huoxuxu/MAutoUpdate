@@ -14,7 +14,8 @@ namespace MAutoUpdate.Commons
         private const String SUFFIX = "-backup";
 
         /// <summary>
-        /// 将指定文件夹的文件改名
+        /// 将指定文件夹的文件改名，
+        /// 注意：只处理目录下的文件，已改名的会跳过
         /// abc.exe-backup
         /// </summary>
         /// <param name="dirPath"></param>
@@ -35,6 +36,19 @@ namespace MAutoUpdate.Commons
                 addLog($"RENAME {file}=>{destPath}");
                 File.Move(file, destPath);
             }
+        }
+
+        /// <summary>
+        /// 传入的目录备份
+        /// </summary>
+        /// <param name="dir"></param>
+        public static void RenameDir(DirectoryInfo dir)
+        {
+            var dirName = dir.FullName.TrimEnd('/', '\\');
+            var destPath = $"{dirName}{SUFFIX}";
+            if (File.Exists(destPath)) return;
+
+            dir.MoveTo(destPath);
         }
 
         /// <summary>
@@ -62,27 +76,71 @@ namespace MAutoUpdate.Commons
         }
 
         /// <summary>
-        /// 移除所有备份文件
+        /// 还原传入目录下的所有备份文件夹
+        /// </summary>
+        /// <param name="dir"></param>
+        public static void ResetDir(DirectoryInfo dir)
+        {
+            var dirs = dir.GetDirectories($"*{SUFFIX}");
+            if (!dirs.Any()) return;
+
+            foreach (var dirItem in dirs)
+            {
+                var dirName = dirItem.FullName.TrimEnd('/', '\\');
+                var ind = dirName.LastIndexOf(SUFFIX);
+                if (ind == -1) return;
+
+                var destPath = dirName.Substring(0, ind);
+                //还原时 如果已解压部分文件，需要先跳过
+                if (Directory.Exists(destPath)) Directory.Delete(destPath);
+
+                addLog($"RESET-DIR {dirItem}=>{destPath}");
+                dirItem.MoveTo(destPath);
+            }
+        }
+
+        /// <summary>
+        /// 移除传入目录的所有备份文件和文件夹
         /// </summary>
         /// <param name="dirPath"></param>
         public static void RemoveFile(String dirPath)
         {
-            var files = Directory.GetFiles(dirPath, $"*{SUFFIX}");
-            if (!files.Any()) return;
-
-            foreach (var file in files)
             {
-                try
+                var files = Directory.GetFiles(dirPath, $"*{SUFFIX}");
+                if (!files.Any()) return;
+
+                foreach (var file in files)
                 {
-                    File.Delete(file);
-                    addLog($"REMOVE {file}");
+                    try
+                    {
+                        File.Delete(file);
+                        addLog($"REMOVE {file}");
+                    }
+                    catch (Exception ex)
+                    {
+                        addLog(ex + "");
+                    }
                 }
-                catch (Exception ex)
+            }
+            {
+                var dirs = Directory.GetDirectories(dirPath, $"*{SUFFIX}");
+                if (!dirs.Any()) return;
+
+                foreach (var dir in dirs)
                 {
-                    addLog(ex + "");
+                    try
+                    {
+                        Directory.Delete(dir);
+                        addLog($"REMOVE-DIR {dir}");
+                    }
+                    catch (Exception ex)
+                    {
+                        addLog(ex + "");
+                    }
                 }
             }
         }
+
 
         private static void addLog(string log)
         {

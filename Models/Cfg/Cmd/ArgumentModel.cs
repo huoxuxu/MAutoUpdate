@@ -8,16 +8,21 @@ namespace MAutoUpdate.Commons
     /// <summary></summary>
     public class ArgumentModel
     {
-        /// <summary></summary>
+        /// <summary>主程序全路径</summary>
         [Description("-main")]
         public String MainExeFullName { get; set; }
-        /// <summary></summary>
+        /// <summary>主程序启动参数</summary>
         [Description("-mainArgs")]
         public String MainExeArgs { get; set; }
 
-        /// <summary></summary>
+        /// <summary>升级压缩包全路径</summary>
+        [Description("-upgradeZip")]
+        public String UpgradeZipFullName { get; set; }
+
+        /// <summary>升级配置</summary>
         [Description("-upgrade")]
         public String UpgradeJsonFullName { get; set; }
+
 
         /// <summary>
         /// 获取启动参数

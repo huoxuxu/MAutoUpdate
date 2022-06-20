@@ -18,6 +18,8 @@ namespace MAutoUpdate.Models
         public static string TempPath { get; set; } = Path.Combine(tmpFullPath, @"MAutoUpdate\temp\");
         /// <summary>MAutoUpdate\bak\</summary>
         public static string BakPath { get; set; } = Path.Combine(tmpFullPath, @"MAutoUpdate\bak\");
+        /// <summary>升级应用运行全路径</summary>
+        public static String AppPath { get; set; } = "".GetDLLRunDir();
 
         /// <summary>是否管理员权限执行</summary>
         public bool IsAdmin { get; set; }
@@ -28,6 +30,9 @@ namespace MAutoUpdate.Models
         public String MainFullName { get; set; }
         /// <summary>主业务程序启动参数</summary>
         public String MainArgs { get; set; }
+
+        /// <summary>升级压缩包全路径</summary>
+        public String UpgradeZipFullName { get; set; }
         /// <summary>升级Json文件全路径</summary>
         public String UpgradeJsonFullName { get; set; }
 
@@ -45,6 +50,7 @@ namespace MAutoUpdate.Models
         {
             this.MainFullName = argModel.MainExeFullName;
             this.MainArgs = argModel.MainExeArgs;
+            this.UpgradeZipFullName = argModel.UpgradeZipFullName;
             this.UpgradeJsonFullName = argModel.UpgradeJsonFullName;
         }
 

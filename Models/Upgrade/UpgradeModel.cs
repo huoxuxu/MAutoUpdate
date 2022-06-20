@@ -21,6 +21,9 @@ namespace MAutoUpdate.Models.Upgrade
         /// <summary>升级时需要杀死的进程</summary>
         public List<String> KillExeFullNameArr { get; set; }
 
+        /// <summary>升级时需要备份的目录</summary>
+        public List<String> BackupDirs { get; set; }
+
 
     }
 }

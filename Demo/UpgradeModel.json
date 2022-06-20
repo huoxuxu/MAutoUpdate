@@ -1,7 +1,8 @@
 {
   "LastVersion": "1.21.0619",
-  "UpgradeZipPackageUrl": "http://localhost:666/tmp/upgrade/DBOP/DBOP-1.0.0.zip",
-  "UpgradeZipPackageMD5": "BF0043D9C778380728921A33E9E0CAD6",
-  "UpgradeContent": "版本：V1.21.0619\n升级内容：\r\n1.XXXX\r\n2.YYYY",
-  "KillExeFullNameArr": []
+  "UpgradeZipPackageUrl": "http://127.0.0.1:2121/tmp/demo-1.0.0.zip",
+  "UpgradeZipPackageMD5": "FE73883B27228DA39673B59E63D6BC62",
+  "UpgradeContent": "版本：\nV1.21.0619\n升级内容：\r\n1.XXXX\r\n2.YYYY",
+  "KillExeFullNameArr": [],
+  "BackupDirs": []
 }

@@ -36,7 +36,7 @@ namespace MAutoUpdate
             3.校验升级包HASH
             4.杀掉相关进程
             5.备份
-            6.解压升级包
+            6.更新
             7.删除备份
 
             解压失败
@@ -44,65 +44,102 @@ namespace MAutoUpdate
              */
 
             OnUpdateProgess?.Invoke(0);
-            var bakPath = UpgradeContext.BakPath;
             var tempPath = UpgradeContext.TempPath;
+            var bakPath = UpgradeContext.BakPath;
 
             #region 创建临时目录
             //创建临时目录信息
-            DirectoryInfo tempinfo = new DirectoryInfo(tempPath);
-            if (!tempinfo.Exists) tempinfo.Create();
+            DirectoryInfo tempInfo = new DirectoryInfo(tempPath);
+            if (!tempInfo.Exists) tempInfo.Create();
 
             //创建备份目录信息
-            DirectoryInfo bakinfo = new DirectoryInfo(bakPath);
-            if (!bakinfo.Exists) bakinfo.Create();
+            DirectoryInfo bakInfo = new DirectoryInfo(bakPath);
+            if (!bakInfo.Exists) bakInfo.Create();
             OnUpdateProgess?.Invoke(1);
             #endregion
 
             var upgradeInfo = context.UpgradeInfo;
             var mainExeFileInfo = new FileInfo(context.MainFullName);
+            FileInfo zipFileInfo;
 
-            var zipFullPath = Path.Combine(tempPath, $"{Path.GetFileNameWithoutExtension(mainExeFileInfo.Name)}_{upgradeInfo.LastVersion}.zip");
-            var zipFileInfo = new FileInfo(zipFullPath);
-            if (zipFileInfo.Exists) zipFileInfo.Delete();
-            OnUpdateProgess?.Invoke(5);
+            // 判断是否走直接解压升级
+            if (this.context.UpgradeZipFullName.IsNullOrEmpty())
+            {
+                // 下载升级
+                // 升级压缩包全路径
+                var mainExeName = Path.GetFileNameWithoutExtension(mainExeFileInfo.Name);
+                var zipName = $"{mainExeName}_{upgradeInfo.LastVersion}";
+                var zipFullPath = Path.Combine(tempPath, $"{zipName}.zip");
+                this.context.UpgradeZipFullName = zipFullPath;
 
-            // 下载文件
-            downLoad(upgradeInfo.UpgradeZipPackageUrl, zipFullPath, 5, 65);
+                zipFileInfo = new FileInfo(this.context.UpgradeZipFullName);
+                if (zipFileInfo.Exists) zipFileInfo.Delete();
+                OnUpdateProgess?.Invoke(5);
 
+                // 下载文件
+                downLoad(upgradeInfo.UpgradeZipPackageUrl, zipFullPath, 5, 65);
+            }
+            else
+            {
+                // 解压升级
+                zipFileInfo = new FileInfo(this.context.UpgradeZipFullName);
+
+                LogTool.AddLog("更新程序：解压升级" + this.context.UpgradeZipFullName);
+                OnUpdateProgess?.Invoke(65);
+            }
+
+            #region 升级前置条件
             // 校验Hash
-            var fileMD5 = HashHelper.GetFileMd5(zipFullPath);
-            LogTool.AddLog($"文件MD5值：{fileMD5} path:{zipFullPath}");
+            var fileMD5 = HashHelper.GetFileMd5(this.context.UpgradeZipFullName);
+            LogTool.AddLog($"文件MD5值：{fileMD5} path:{this.context.UpgradeZipFullName}");
             if (!fileMD5.EqualIgnoreCase(upgradeInfo.UpgradeZipPackageMD5))
                 throw new Exception($"文件Hash校验失败！");
             OnUpdateProgess?.Invoke(70);
 
             // 杀进程
+            var kills = context.UpgradeInfo.KillExeFullNameArr ?? new List<String>();
+            var maxKillCount = 5;
+            int killCount = 0;
+            for (int i = 0; i < maxKillCount; i++)
             {
-                var kills = context.UpgradeInfo.KillExeFullNameArr ?? new List<String>();
-                var maxKillCount = 5;
-                int killCount = 0;
-                for (int i = 0; i < maxKillCount; i++)
-                {
-                    killCount = ProcessTools.KillAllProcess(kills.ToArray());
-                    if (killCount == 0) break;
+                killCount = ProcessTools.KillAllProcess(kills.ToArray());
+                if (killCount == 0) break;
 
-                    Thread.Sleep(500);
-                }
-                OnUpdateProgess?.Invoke(75);
-
-                if (killCount > 0)
-                    throw new Exception($"进程自动结束失败，已重试 {maxKillCount} 次。"
-                        + $"请手动结束以下进程：\r\n{kills.Join("\r\n")}");
+                Thread.Sleep(500);
             }
+            OnUpdateProgess?.Invoke(75);
+
+            if (killCount > 0)
+                throw new Exception($"进程自动结束失败，已重试 {maxKillCount} 次。"
+                    + $"请手动结束以下进程：\r\n{kills.Join("\r\n")}");
+            #endregion
 
             var path = mainExeFileInfo.DirectoryName;
             // 备份 & 更新
             #region 备份文件
             LogTool.AddLog("更新程序：准备执行备份操作");
+            var backupDirs = upgradeInfo.BackupDirs ?? new List<string>();
             try
             {
                 //备份文件
+                // 备份主程序目录中的文件
                 BackupHelper.RenameFile(path);
+
+                var appPath = UpgradeContext.AppPath.DirFormat();
+                foreach (var backupDir in backupDirs)
+                {
+                    var bkPath = Path.Combine(path, backupDir).DirFormat();
+                    var bk = new DirectoryInfo(bkPath);
+                    if (!bk.Exists) continue;
+                    // 过滤掉升级程序所在目录
+                    if (appPath.EqualIgnoreCase(bkPath))
+                    {
+                        LogTool.AddLog("更新程序：过滤掉升级程序所在目录");
+                        continue;
+                    }
+
+                    BackupHelper.RenameDir(bk);
+                }
                 LogTool.AddLog("更新程序：执行备份成功");
                 OnUpdateProgess?.Invoke(80);
             }
@@ -114,7 +151,11 @@ namespace MAutoUpdate
                 {
                     BackupHelper.ResetFile(path);
                     LogTool.AddLog($"文件还原成功！");
-
+                    if (!backupDirs.Any())
+                    {
+                        BackupHelper.ResetDir(new DirectoryInfo(path));
+                        LogTool.AddLog($"文件夹还原成功！");
+                    }
                     return;
                 }
                 catch
@@ -128,9 +169,9 @@ namespace MAutoUpdate
             #region 更新
             try
             {
-                LogTool.AddLog("更新程序：解压" + zipFullPath);
+                LogTool.AddLog($"更新程序：解压{this.context.UpgradeZipFullName}");
                 MyExt.ICSharpCodeSharpZipLib.ICSharpCodeSharpZipLibTools.UnZip(zipFileInfo, mainExeFileInfo.Directory);
-                LogTool.AddLog("更新程序：" + zipFullPath + "解压完成");
+                LogTool.AddLog($"更新程序：{this.context.UpgradeZipFullName} 解压完成");
                 OnUpdateProgess?.Invoke(85);
 
                 //删除备份文件
@@ -171,7 +212,7 @@ namespace MAutoUpdate
             LogTool.AddLog("更新程序：下载更新包文件" + url);
             DownLoadTools.DownloadFile(url, zipPath, downloadRate =>
             {
-                var rate = currentRate + ((maxRate - currentRate) / 100d);
+                var rate = currentRate + ((maxRate - currentRate) / 100d * downloadRate);
                 rate = Math.Round(rate, 2);
                 OnUpdateProgess?.Invoke(rate);
             });

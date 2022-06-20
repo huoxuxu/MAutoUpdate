@@ -109,14 +109,14 @@
     </Compile>
     <Compile Include="LinqBridge.cs" />
     <Compile Include="Models\Cfg\App\AppSettingCfgModel.cs" />
-    <Compile Include="Models\ArgumentModel.cs" />
+    <Compile Include="Models\Cfg\Cmd\ArgumentModel.cs" />
     <Compile Include="Commons\CmdArgTools.cs" />
     <Compile Include="Commons\RegTools.cs" />
     <Compile Include="Commons\WindowsIdentityTools.cs" />
     <Compile Include="Models\Upgrade\UpgradeModel.cs" />
     <Compile Include="Models\MainLocalInfo.cs" />
     <Compile Include="Models\RemoteRespModel.cs" />
-    <Compile Include="Models\Context\UpdateContext.cs" />
+    <Compile Include="Models\Context\UpgradeContext.cs" />
     <Compile Include="Services\UpdateWorkService.cs" />
     <Compile Include="Commons\Log\LogTool.cs" />
     <Compile Include="Frm\MainForm.cs">
