@@ -17,9 +17,9 @@ namespace MAutoUpdate
     {
         /// <summary>
         /// 程序主入口
-        /// 启动命令：MAutoUpdate.exe -main d:/main.exe -upgrade d:/upgrade.json
+        /// 启动命令：MAutoUpdate.exe -main d:/main.exe -mainArgs "arg1" -upgrade d:/upgrade.json
         /// </summary>
-        /// <param name="args">-main d:/main.exe -upgrade d:/upgrade.json</param>
+        /// <param name="args">-main d:/main.exe -mainArgs "arg1" -upgrade d:/upgrade.json</param>
         [STAThread]
         static void Main(string[] args)
         {

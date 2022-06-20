@@ -41,7 +41,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET20</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET20;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>true</UseVSHostingProcess>
@@ -86,22 +86,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\HXXLib\HTools\语言扩展\System\ext\System20Ext.cs">
-      <Link>Commons\Ext\System20Ext.cs</Link>
+    <Compile Include="..\HXXLib\MyExt.ICSharpCodeSharpZipLib\ICSharpCodeSharpZipLibTools.cs">
+      <Link>Commons\Zip\ICSharpCodeSharpZipLibTools.cs</Link>
     </Compile>
-    <Compile Include="Commons\AppSettingsTools.cs" />
+    <Compile Include="Commons\Config\AppSettingsTools.cs" />
     <Compile Include="Commons\BackupHelper.cs" />
-    <Compile Include="Commons\Ext\MyExt.cs" />
+    <Compile Include="Commons\Http\DownLoadTools.cs" />
     <Compile Include="Commons\HashHelper.cs" />
-    <Compile Include="Commons\JsonNetHelper.cs" />
+    <Compile Include="Commons\Json\JsonNetHelper.cs" />
     <Compile Include="Commons\ProcessTools.cs" />
-    <Compile Include="Commons\System\ExtensionAttribute.cs" />
     <Compile Include="Frm\FrmAsk.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Frm\FrmAsk.Designer.cs">
       <DependentUpon>FrmAsk.cs</DependentUpon>
     </Compile>
+    <Compile Include="Frm\FrmUpgradeOk.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm\FrmUpgradeOk.Designer.cs">
+      <DependentUpon>FrmUpgradeOk.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LinqBridge.cs" />
     <Compile Include="Models\Cfg\App\AppSettingCfgModel.cs" />
     <Compile Include="Models\ArgumentModel.cs" />
     <Compile Include="Commons\CmdArgTools.cs" />
@@ -112,7 +118,7 @@
     <Compile Include="Models\RemoteRespModel.cs" />
     <Compile Include="Models\Context\UpdateContext.cs" />
     <Compile Include="Services\UpdateWorkService.cs" />
-    <Compile Include="Commons\LogTool.cs" />
+    <Compile Include="Commons\Log\LogTool.cs" />
     <Compile Include="Frm\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -135,54 +141,12 @@
     <Compile Include="Frm\UserControl\YButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Commons\Zip DLL\ComHelper.cs" />
-    <Compile Include="Commons\Zip DLL\CRC32.cs" />
-    <Compile Include="Commons\Zip DLL\Deflate.cs" />
-    <Compile Include="Commons\Zip DLL\DeflateStream.cs" />
-    <Compile Include="Commons\Zip DLL\EncryptionAlgorithm.cs" />
-    <Compile Include="Commons\Zip DLL\Events.cs" />
-    <Compile Include="Commons\Zip DLL\Exceptions.cs" />
-    <Compile Include="Commons\Zip DLL\ExtractExistingFileAction.cs" />
-    <Compile Include="Commons\Zip DLL\FileSelector.cs" />
-    <Compile Include="Commons\Zip DLL\GZipStream.cs" />
-    <Compile Include="Commons\Zip DLL\Inflate.cs" />
-    <Compile Include="Commons\Zip DLL\InfTree.cs" />
-    <Compile Include="Commons\Zip DLL\OffsetStream.cs" />
-    <Compile Include="Commons\Zip DLL\ParallelDeflateOutputStream.cs" />
-    <Compile Include="Commons\Zip DLL\Shared.cs" />
-    <Compile Include="Commons\Zip DLL\Tree.cs" />
-    <Compile Include="Commons\Zip DLL\WinZipAes.cs" />
-    <Compile Include="Commons\Zip DLL\ZipConstants.cs" />
-    <Compile Include="Commons\Zip DLL\ZipCrypto.cs" />
-    <Compile Include="Commons\Zip DLL\ZipDirEntry.cs" />
-    <Compile Include="Commons\Zip DLL\ZipEntry.cs" />
-    <Compile Include="Commons\Zip DLL\ZipEntry.Extract.cs" />
-    <Compile Include="Commons\Zip DLL\ZipEntry.Read.cs" />
-    <Compile Include="Commons\Zip DLL\ZipEntry.Write.cs" />
-    <Compile Include="Commons\Zip DLL\ZipEntrySource.cs" />
-    <Compile Include="Commons\Zip DLL\ZipErrorAction.cs" />
-    <Compile Include="Commons\Zip DLL\ZipFile.AddUpdate.cs" />
-    <Compile Include="Commons\Zip DLL\ZipFile.Check.cs" />
-    <Compile Include="Commons\Zip DLL\ZipFile.cs" />
-    <Compile Include="Commons\Zip DLL\ZipFile.Events.cs" />
-    <Compile Include="Commons\Zip DLL\ZipFile.Extract.cs" />
-    <Compile Include="Commons\Zip DLL\ZipFile.Read.cs" />
-    <Compile Include="Commons\Zip DLL\ZipFile.Save.cs" />
-    <Compile Include="Commons\Zip DLL\ZipFile.SaveSelfExtractor.cs" />
-    <Compile Include="Commons\Zip DLL\ZipFile.Selector.cs" />
-    <Compile Include="Commons\Zip DLL\ZipFile.Static.cs" />
-    <Compile Include="Commons\Zip DLL\ZipFile.x-IEnumerable.cs" />
-    <Compile Include="Commons\Zip DLL\ZipInputStream.cs" />
-    <Compile Include="Commons\Zip DLL\ZipOutputStream.cs" />
-    <Compile Include="Commons\Zip DLL\ZipSegmentedStream.cs" />
-    <Compile Include="Commons\Zip DLL\Zlib.cs" />
-    <Compile Include="Commons\Zip DLL\ZlibBaseStream.cs" />
-    <Compile Include="Commons\Zip DLL\ZlibCodec.cs" />
-    <Compile Include="Commons\Zip DLL\ZlibConstants.cs" />
-    <Compile Include="Commons\Zip DLL\ZlibStream.cs" />
     <Compile Include="Services\UpgradeService.cs" />
     <EmbeddedResource Include="Frm\FrmAsk.resx">
       <DependentUpon>FrmAsk.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Frm\FrmUpgradeOk.resx">
+      <DependentUpon>FrmUpgradeOk.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Frm\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -207,13 +171,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Commons\Zip DLL\Migrated rules for Zip DLL.ruleset" />
     <None Include="Demo\UpgradeModel.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Commons\Zip DLL\msbuild.flymake.xml" />
     <Content Include="favicon.ico" />
     <Content Include="readme.txt" />
     <None Include="FodyWeavers.xml" />
@@ -231,7 +194,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Commons\Zip DLL\BZip2\" />
+    <Folder Include="Commons\System\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HXXLib\MyExt.Net2\MyExt.Net2.csproj">
+      <Project>{fbaf3c7a-a308-4463-8082-c8b3bbe75c93}</Project>
+      <Name>MyExt.Net2</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\Fody.2.0.0\build\portable-net+sl+win+wpa+wp\Fody.targets" Condition="Exists('packages\Fody.2.0.0\build\portable-net+sl+win+wpa+wp\Fody.targets')" />

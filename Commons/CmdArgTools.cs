@@ -29,6 +29,10 @@ namespace MAutoUpdate.Commons
                 {
                     argModel.MainExeFullName = val;
                 }
+                else if (key.EqualIgnoreCase("-mainArgs"))
+                {
+                    argModel.MainExeArgs = val;
+                }
                 else if (key.EqualIgnoreCase("-upgrade"))
                 {
                     argModel.UpgradeJsonFullName = val;

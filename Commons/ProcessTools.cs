@@ -27,6 +27,7 @@ namespace MAutoUpdate.Commons
             System.Diagnostics.Process.Start(startInfo);
         }
 
+        #region Kill
         /// <summary>
         /// 杀掉当前运行的程序进程
         /// </summary>
@@ -63,6 +64,7 @@ namespace MAutoUpdate.Commons
 
             return cou;
         }
+        #endregion
 
     }
 }

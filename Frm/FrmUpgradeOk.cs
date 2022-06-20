@@ -6,17 +6,17 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-
+using MAutoUpdate.Commons;
 using MAutoUpdate.Models;
 
 namespace MAutoUpdate
 {
-    public partial class MainForm : Form
+    public partial class FrmUpgradeOk : Form
     {
         #region 初始化
         private UpgradeContext context;
 
-        public MainForm(UpgradeContext context)
+        public FrmUpgradeOk(UpgradeContext context)
         {
             InitializeComponent();
 
@@ -28,7 +28,7 @@ namespace MAutoUpdate
             var name = this.context.MainDisplayName;
             var ver = this.context.UpgradeInfo.LastVersion.Trim('v', 'V');
             this.LBTitle.Text = $"新版本-{name} V{ver}";
-            this.lblContent.Text = this.context.UpgradeInfo.UpgradeContent;
+            this.lblContent.Text = $"已安装{name}";
         }
         #endregion
 
@@ -66,55 +66,27 @@ namespace MAutoUpdate
         #endregion
 
         /// <summary>
-        /// 立即升级
+        /// 立即使用
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnUpdateNow_Click(object sender, EventArgs e)
         {
-            this.Hide();// 隐藏当前窗口
-
-            UpdateForm updateForm = new UpdateForm(this.context);
-            var dr = updateForm.ShowDialog();
-            if (dr == DialogResult.OK)
+            // 启动主程序
+            LogTool.AddLog($"更新程序：启动 {context.MainFullName} {context.MainArgs}");
+            if (context.MainArgs.IsNullOrEmpty())
             {
-                var frmOk = new FrmUpgradeOk(this.context);
-                var okdr = frmOk.ShowDialog();
-                if (okdr == DialogResult.OK)
-                {
-                    Application.Exit();
-                    Environment.Exit(0);
-                }
+                System.Diagnostics.Process.Start(context.MainFullName);
             }
             else
             {
-
+                System.Diagnostics.Process.Start(context.MainFullName, context.MainArgs);
             }
+
+            Thread.Sleep(1200);
+
+            this.DialogResult = DialogResult.OK;
         }
-
-        /// <summary>
-        /// 稍后更新,则将更新程序关闭
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnUpdateLater_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
-        /// <summary>
-        /// 忽略
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnIgnore_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
-
-        #region 辅助
-        #endregion
 
     }
 }

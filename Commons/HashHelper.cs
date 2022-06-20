@@ -18,7 +18,7 @@ namespace MAutoUpdate.Commons
         /// <returns></returns>
         public static bool ValidateHash(string fileFullPath, string remoteHash)
         {
-            var md5 = ComputeMD5(fileFullPath) + "";
+            var md5 = GetFileMd5(fileFullPath) + "";
             return remoteHash.Equals(md5, StringComparison.OrdinalIgnoreCase);
         }
 
@@ -27,7 +27,7 @@ namespace MAutoUpdate.Commons
         /// </summary>
         /// <param name="fileName">指定文件的完全限定名称</param>
         /// <returns>返回值的字符串形式</returns>
-        public static String ComputeMD5(String fileName)
+        public static String GetFileMd5(String fileName)
         {
             String hashMD5 = String.Empty;
             //检查文件是否存在，如果文件存在则进行计算，否则返回空值

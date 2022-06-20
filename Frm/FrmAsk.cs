@@ -11,6 +11,7 @@ namespace MAutoUpdate
 {
     public partial class FrmAsk : Form
     {
+        #region 初始化
         private UpgradeContext context;
 
         public FrmAsk(UpgradeContext context)
@@ -19,6 +20,15 @@ namespace MAutoUpdate
 
             this.context = context;
         }
+
+        private void FrmAsk_Load(object sender, EventArgs e)
+        {
+            var name = this.context.MainDisplayName;
+            var ver = this.context.UpgradeInfo.LastVersion.Trim('v', 'V');
+            this.LBTitle.Text = $"新版本-{name} V{ver}";
+            this.lblContent.Text = $"{name}正在运行，请问是否关闭{name}立即升级？";
+        }
+        #endregion
 
         #region 让窗体变成可移动
         [DllImport("user32.dll")]
@@ -78,7 +88,6 @@ namespace MAutoUpdate
                 Application.Exit();
             }
         }
-
 
     }
 }

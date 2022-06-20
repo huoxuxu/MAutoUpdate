@@ -44,10 +44,9 @@ namespace MAutoUpdate
             this.LBTitle.BackColor = System.Drawing.Color.Transparent;
             this.LBTitle.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Bold);
             this.LBTitle.ForeColor = System.Drawing.Color.DimGray;
-            this.LBTitle.Location = new System.Drawing.Point(15, 16);
-            this.LBTitle.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.LBTitle.Location = new System.Drawing.Point(11, 13);
             this.LBTitle.Name = "LBTitle";
-            this.LBTitle.Size = new System.Drawing.Size(69, 26);
+            this.LBTitle.Size = new System.Drawing.Size(54, 19);
             this.LBTitle.TabIndex = 22;
             this.LBTitle.Text = "新版本";
             // 
@@ -55,10 +54,9 @@ namespace MAutoUpdate
             // 
             this.lblContent.Font = new System.Drawing.Font("微软雅黑", 11F);
             this.lblContent.ForeColor = System.Drawing.Color.DimGray;
-            this.lblContent.Location = new System.Drawing.Point(149, 129);
-            this.lblContent.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblContent.Location = new System.Drawing.Point(112, 103);
             this.lblContent.Name = "lblContent";
-            this.lblContent.Size = new System.Drawing.Size(477, 199);
+            this.lblContent.Size = new System.Drawing.Size(358, 159);
             this.lblContent.TabIndex = 24;
             // 
             // btnUpdateNow
@@ -69,14 +67,13 @@ namespace MAutoUpdate
             this.btnUpdateNow.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.btnUpdateNow.IsColorChange = true;
             this.btnUpdateNow.IsFontChange = false;
-            this.btnUpdateNow.Location = new System.Drawing.Point(520, 415);
-            this.btnUpdateNow.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.btnUpdateNow.Location = new System.Drawing.Point(390, 332);
             this.btnUpdateNow.MoveColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(173)))), ((int)(((byte)(25)))));
             this.btnUpdateNow.MoveFontColor = System.Drawing.Color.White;
             this.btnUpdateNow.Name = "btnUpdateNow";
             this.btnUpdateNow.NormalColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(173)))), ((int)(((byte)(25)))));
             this.btnUpdateNow.NormalFontColor = System.Drawing.Color.White;
-            this.btnUpdateNow.Size = new System.Drawing.Size(188, 56);
+            this.btnUpdateNow.Size = new System.Drawing.Size(141, 45);
             this.btnUpdateNow.TabIndex = 27;
             this.btnUpdateNow.Text = "立即更新";
             this.btnUpdateNow.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -90,14 +87,13 @@ namespace MAutoUpdate
             this.btnUpdateLater.ForeColor = System.Drawing.Color.Black;
             this.btnUpdateLater.IsColorChange = true;
             this.btnUpdateLater.IsFontChange = false;
-            this.btnUpdateLater.Location = new System.Drawing.Point(309, 415);
-            this.btnUpdateLater.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.btnUpdateLater.Location = new System.Drawing.Point(232, 332);
             this.btnUpdateLater.MoveColor = System.Drawing.Color.White;
             this.btnUpdateLater.MoveFontColor = System.Drawing.Color.Black;
             this.btnUpdateLater.Name = "btnUpdateLater";
             this.btnUpdateLater.NormalColor = System.Drawing.Color.White;
             this.btnUpdateLater.NormalFontColor = System.Drawing.Color.Black;
-            this.btnUpdateLater.Size = new System.Drawing.Size(188, 56);
+            this.btnUpdateLater.Size = new System.Drawing.Size(141, 45);
             this.btnUpdateLater.TabIndex = 26;
             this.btnUpdateLater.Text = "以后提醒我";
             this.btnUpdateLater.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -111,14 +107,13 @@ namespace MAutoUpdate
             this.btnIgnore.ForeColor = System.Drawing.Color.Black;
             this.btnIgnore.IsColorChange = true;
             this.btnIgnore.IsFontChange = false;
-            this.btnIgnore.Location = new System.Drawing.Point(101, 415);
-            this.btnIgnore.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.btnIgnore.Location = new System.Drawing.Point(76, 332);
             this.btnIgnore.MoveColor = System.Drawing.Color.White;
             this.btnIgnore.MoveFontColor = System.Drawing.Color.Black;
             this.btnIgnore.Name = "btnIgnore";
             this.btnIgnore.NormalColor = System.Drawing.Color.White;
             this.btnIgnore.NormalFontColor = System.Drawing.Color.Black;
-            this.btnIgnore.Size = new System.Drawing.Size(188, 56);
+            this.btnIgnore.Size = new System.Drawing.Size(141, 45);
             this.btnIgnore.TabIndex = 25;
             this.btnIgnore.Text = "忽略这次更新";
             this.btnIgnore.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -126,11 +121,11 @@ namespace MAutoUpdate
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.ClientSize = new System.Drawing.Size(800, 525);
+            this.ClientSize = new System.Drawing.Size(600, 420);
             this.Controls.Add(this.btnUpdateNow);
             this.Controls.Add(this.btnUpdateLater);
             this.Controls.Add(this.btnIgnore);
@@ -139,7 +134,6 @@ namespace MAutoUpdate
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MainForm";

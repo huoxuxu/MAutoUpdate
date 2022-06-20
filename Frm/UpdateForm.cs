@@ -12,10 +12,6 @@ namespace MAutoUpdate
     public partial class UpdateForm : Form
     {
         private UpgradeContext context;
-
-        public delegate void UpdateUI(int step);//声明一个更新主线程的委托
-        public UpdateUI UpdateUIDelegate;
-
         private UpdateWorkService work;
 
         public UpdateForm(UpgradeContext context)
@@ -25,19 +21,22 @@ namespace MAutoUpdate
             this.context = context;
             this.work = new UpdateWorkService(this.context);
 
-            UpdateUIDelegate = new UpdateUI((obj) =>
+            work.OnUpdateProgess = ((rate) =>
             {
-                this.updateBar.Value = obj;
-            });
-
-            work.OnUpdateProgess += new UpdateWorkService.UpdateProgess((obj) =>
-            {
-                this.Invoke(UpdateUIDelegate, (int)obj);
+                var rateInt = (int)rate;
+                this.Invoke((Action)(() =>
+                {
+                    this.updateBar.Value = rateInt;
+                    this.lblUpgradeRate.Text = $"{rateInt}%";
+                }));
             });
         }
 
         private void UpdateForm_Load(object sender, EventArgs e)
         {
+            var name = this.context.MainDisplayName;
+            var ver = this.context.UpgradeInfo.LastVersion.Trim('v', 'V');
+            this.LBTitle.Text = $"新版本-{name} V{ver}";
             this.lblContent.Text = this.context.UpgradeInfo.UpgradeContent;
 
             ThreadPool.QueueUserWorkItem((obj) =>

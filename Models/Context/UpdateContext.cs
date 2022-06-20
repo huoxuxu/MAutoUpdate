@@ -14,7 +14,9 @@ namespace MAutoUpdate.Models
         private static String tmpFullPath = Environment.GetEnvironmentVariable("TEMP");
 
         //临时目录（WIN7以及以上在C盘只有对于temp目录有操作权限）
+        /// <summary>MAutoUpdate\temp\</summary>
         public static string TempPath { get; set; } = Path.Combine(tmpFullPath, @"MAutoUpdate\temp\");
+        /// <summary>MAutoUpdate\bak\</summary>
         public static string BakPath { get; set; } = Path.Combine(tmpFullPath, @"MAutoUpdate\bak\");
 
         /// <summary>是否管理员权限执行</summary>
@@ -41,9 +43,9 @@ namespace MAutoUpdate.Models
         /// <param name="argModel"></param>
         public void Init(ArgumentModel argModel)
         {
-            // TODO 从启动参数读取
-            //this.MainFullName = argModel.MainProgram;
-
+            this.MainFullName = argModel.MainExeFullName;
+            this.MainArgs = argModel.MainExeArgs;
+            this.UpgradeJsonFullName = argModel.UpgradeJsonFullName;
         }
 
         /// <summary>

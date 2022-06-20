@@ -11,6 +11,9 @@ namespace MAutoUpdate.Commons
         /// <summary></summary>
         [Description("-main")]
         public String MainExeFullName { get; set; }
+        /// <summary></summary>
+        [Description("-mainArgs")]
+        public String MainExeArgs { get; set; }
 
         /// <summary></summary>
         [Description("-upgrade")]
