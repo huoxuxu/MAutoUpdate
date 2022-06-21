@@ -31,8 +31,8 @@ namespace MAutoUpdate.Models.Upgrade
         /// <summary>启动的程序的启动参数</summary>
         public String StartupExeArgs { get; set; }
 
-        /// <summary>升级时需要杀死的进程</summary>
-        public List<String> KillExeFullNameArr { get; set; }
+        /// <summary>升级时需要杀死的进程名集合</summary>
+        public List<String> KillExeNameArr { get; set; }
 
         /// <summary>升级时需要备份的目录</summary>
         public List<String> BackupDirs { get; set; }

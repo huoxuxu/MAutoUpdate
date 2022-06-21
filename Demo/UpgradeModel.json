@@ -4,13 +4,13 @@
 
   "LastVersion": "1.21.0619",
   "UpgradeZipPackageUrl": "http://127.0.0.1:2121/tmp/demo-1.0.0.zip",
-  "UpgradeZipPackageMD5": "F423475DF2CD193DC787CDD2D285DB51",
+  "UpgradeZipPackageMD5": "",
   "UpgradeContent": "版本：V1.21.0619\n升级内容：\r\n1.XXXX\r\n2.YYYY",
   "UpgradeZipFullName": "",
 
-  "StartupExeFullName": "d:/tmp/demo/Baohe.exe",
+  "StartupExeFullName": "d:/tmp/demo/demo.exe",
   "StartupExeArgs": "",
 
   "BackupDirs": [ "Data", "locales", "BarCode" ],
-  "KillExeFullNameArr": []
+  "KillExeNameArr": []
 }

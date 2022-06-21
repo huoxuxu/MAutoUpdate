@@ -21,7 +21,15 @@ namespace MAutoUpdate
             this.context = context;
             this.work = new UpdateWorkService(this.context);
 
-            work.OnUpdateProgess = ((rate) =>
+            work.OnUpdateMilestone = milestone =>
+            {
+                this.Invoke((Action)(() =>
+                {
+                    // 正在升级...
+                    this.lblMilestone.Text = $"{milestone}";
+                }));
+            };
+            work.OnUpdateProgess = rate =>
             {
                 var rateInt = (int)rate;
                 this.Invoke((Action)(() =>
@@ -29,7 +37,7 @@ namespace MAutoUpdate
                     this.updateBar.Value = rateInt;
                     this.lblUpgradeRate.Text = $"{rateInt}%";
                 }));
-            });
+            };
         }
 
         private void UpdateForm_Load(object sender, EventArgs e)
@@ -50,6 +58,8 @@ namespace MAutoUpdate
                 {
                     LogTool.AddLog(ex + "");
                     MessageBox.Show($"出现异常：{ex.Message}");
+
+                    Environment.Exit(0);
                 }
             });
         }

@@ -117,6 +117,7 @@
     <Compile Include="Models\MainLocalInfo.cs" />
     <Compile Include="Models\RemoteRespModel.cs" />
     <Compile Include="Models\Context\UpgradeContext.cs" />
+    <Compile Include="Services\AppInitService.cs" />
     <Compile Include="Services\UpdateWorkService.cs" />
     <Compile Include="Commons\Log\LogTool.cs" />
     <Compile Include="Frm\MainForm.cs">
@@ -141,7 +142,6 @@
     <Compile Include="Frm\UserControl\YButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Services\UpgradeService.cs" />
     <EmbeddedResource Include="Frm\FrmAsk.resx">
       <DependentUpon>FrmAsk.cs</DependentUpon>
     </EmbeddedResource>

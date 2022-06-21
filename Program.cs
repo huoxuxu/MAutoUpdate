@@ -29,63 +29,24 @@ namespace MAutoUpdate
 
             try
             {
+                LogTool.AddLog($"================================");
                 LogTool.AddLog($"开始更新...");
+                LogTool.AddLog($"================================");
 
                 #region Mutex 更新程序不能存在多个
                 var fVerInfo = Process.GetCurrentProcess().MainModule.FileVersionInfo;
                 var mutexName = $"{fVerInfo.FileName.Replace("\\", "_").Replace("/", "_")}_{fVerInfo.FileVersion}_Mutex";
                 new Mutex(true, mutexName, out var f);//互斥
-                if (!f) return;
-                #endregion
-
-                // 更新上下文
-                UpgradeContext context = new UpgradeContext()
+                if (!f)
                 {
-                    IsAdmin = WindowsIdentityTools.IsAdmin(),
-                };
+                    LogTool.AddLog($"升级程序已存在，当前程序即将退出！");
 
-                #region 处理命令行参数和配置文件
-                {
-                    var asModel = AppSettingsTools.Get<AppSettingCfgModel>();
-                    context.Init(asModel);
-
-                    ArgumentModel argModel = CmdArgTools.GetArgumentModel(args);
-                    if (argModel != null)
-                    {
-                        context.Init(argModel);
-                    }
+                    return;
                 }
                 #endregion
 
-                if (context.UpgradeJsonFullName.IsNullOrEmpty()) throw new Exception($"请指定升级配置文件！");
-                if (!File.Exists(context.UpgradeJsonFullName)) throw new Exception($"升级配置文件不存在！path:{context.UpgradeJsonFullName}");
-
-                #region 解析升级Json
-                var json = File.ReadAllText(context.UpgradeJsonFullName);
-                context.UpgradeInfo = JsonNetHelper.DeserializeObject<UpgradeModel>(json);
-
-                #region 处理默认值
-                context.MainDisplayName = context.UpgradeInfo.MainAppDisplayName;
-                context.MainFullName = context.UpgradeInfo.MainAppFullName;
-
-                context.UpgradeZipFullName = context.UpgradeInfo.UpgradeZipFullName;
-
-                #endregion
-                #endregion
-                LogTool.AddLog($"context:{JsonNetHelper.SerializeObject(context)}");
-
-                if (context.UpgradeInfo.StartupExeFullName.IsNullOrEmpty()) throw new Exception($"启动程序路径未指定！");
-
-                if (string.IsNullOrEmpty(context.MainFullName)) throw new Exception($"主程序路径未指定！");
-                if (!File.Exists(context.MainFullName)) throw new Exception($"主程序路径不存在！");
-
-                //if (!resp.Upgrade)
-                //{
-                //    // 拉起主程序
-                //    Process.Start(context.MainFullName);
-                //    MessageBox.Show($"无需更新！");
-                //    return;
-                //}
+                // 初始化上下文
+                var context = AppInitService.InitContext(args);
 
                 /* 
                  * 当前用户是管理员的时候，直接启动应用程序
@@ -135,6 +96,8 @@ namespace MAutoUpdate
             {
                 LogTool.AddLog(ex + "");
                 MessageBox.Show(ex.Message);
+
+                Environment.Exit(0);
             }
         }
 

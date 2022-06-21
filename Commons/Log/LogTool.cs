@@ -12,7 +12,6 @@ namespace MAutoUpdate
 
         public static void AddLog(String value)
         {
-            Debug.WriteLine(value);
             if (Directory.Exists(Path.Combine(temp, @"log\")) == false)
             {
                 DirectoryInfo directoryInfo = new DirectoryInfo(Path.Combine(temp, @"log\"));
@@ -20,7 +19,7 @@ namespace MAutoUpdate
             }
             using (StreamWriter sw = File.AppendText(Path.Combine(temp, @"log\update.log")))
             {
-                sw.WriteLine(value);
+                sw.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff} value");
             }
         }
     }
