@@ -72,15 +72,19 @@ namespace MAutoUpdate
         /// <param name="e"></param>
         private void btnUpdateNow_Click(object sender, EventArgs e)
         {
+            var upgradeInfo = context.UpgradeInfo;
+            var startupExe = upgradeInfo.StartupExeFullName;
+            var startupExeArgs = upgradeInfo.StartupExeArgs;
+
             // 启动主程序
-            LogTool.AddLog($"更新程序：启动 {context.MainFullName} {context.MainArgs}");
-            if (context.MainArgs.IsNullOrEmpty())
+            LogTool.AddLog($"更新程序：启动 {startupExe} {startupExeArgs}");
+            if (startupExeArgs.IsNullOrEmpty())
             {
-                System.Diagnostics.Process.Start(context.MainFullName);
+                System.Diagnostics.Process.Start(startupExe);
             }
             else
             {
-                System.Diagnostics.Process.Start(context.MainFullName, context.MainArgs);
+                System.Diagnostics.Process.Start(startupExe, startupExeArgs);
             }
 
             Thread.Sleep(1200);

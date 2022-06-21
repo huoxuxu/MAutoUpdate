@@ -12,6 +12,17 @@ namespace MAutoUpdate.Commons
         /// 使用UAC启动重启应用程序
         /// </summary>
         /// <param name="args"></param>
+        public static void RestartWithUAC(string[] args)
+        {
+            args = args ?? new string[0];
+
+            RestartWithUAC(args.Join(" "));
+        }
+
+        /// <summary>
+        /// 使用UAC启动重启应用程序
+        /// </summary>
+        /// <param name="args"></param>
         public static void RestartWithUAC(string args)
         {
             ProcessStartInfo startInfo = new ProcessStartInfo
@@ -20,9 +31,9 @@ namespace MAutoUpdate.Commons
                 FileName = System.Windows.Forms.Application.ExecutablePath,
                 //设置启动动作,确保以管理员身份运行 
                 Verb = "runas",
-
-                Arguments = $" {args}"
             };
+            if (!args.IsNullOrEmpty()) startInfo.Arguments = $" {args}";
+
             //如果不是管理员，则启动UAC 
             System.Diagnostics.Process.Start(startInfo);
         }

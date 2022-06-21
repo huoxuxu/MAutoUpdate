@@ -25,18 +25,22 @@ namespace MAutoUpdate.Commons
                 var key = item[0].Trim();
                 var val = item[1].Trim();
 
-                if (key.EqualIgnoreCase("-main"))
-                {
-                    argModel.MainExeFullName = val;
-                }
-                else if (key.EqualIgnoreCase("-mainArgs"))
-                {
-                    argModel.MainExeArgs = val;
-                }
-                else if (key.EqualIgnoreCase("-upgrade"))
+                if (key.EqualIgnoreCase("-upgrade"))
                 {
                     argModel.UpgradeJsonFullName = val;
                 }
+                //else if (key.EqualIgnoreCase("-main"))
+                //{
+                //    argModel.MainExeFullName = val;
+                //}
+                //else if (key.EqualIgnoreCase("-mainArgs"))
+                //{
+                //    argModel.MainExeArgs = val;
+                //}
+                //else if (key.EqualIgnoreCase("-upgradeZip"))
+                //{
+                //    argModel.UpgradeZipFullName = val;
+                //}
             }
 
             return argModel;

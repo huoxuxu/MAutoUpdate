@@ -115,6 +115,7 @@ namespace MAutoUpdate
             #endregion
 
             var path = mainExeFileInfo.DirectoryName;
+            var mainDir = new DirectoryInfo(path);
             // 备份 & 更新
             #region 备份文件
             LogTool.AddLog("更新程序：准备执行备份操作");
@@ -125,12 +126,15 @@ namespace MAutoUpdate
                 // 备份主程序目录中的文件
                 BackupHelper.RenameFile(path);
 
+                // 备份文件夹
+                LogTool.AddLog($"更新程序：备份的目录：{upgradeInfo.BackupDirs.Join(", ")}");
                 var appPath = UpgradeContext.AppPath.DirFormat();
                 foreach (var backupDir in backupDirs)
                 {
                     var bkPath = Path.Combine(path, backupDir).DirFormat();
                     var bk = new DirectoryInfo(bkPath);
                     if (!bk.Exists) continue;
+
                     // 过滤掉升级程序所在目录
                     if (appPath.EqualIgnoreCase(bkPath))
                     {
@@ -149,14 +153,18 @@ namespace MAutoUpdate
 
                 try
                 {
+                    // 还原文件
                     BackupHelper.ResetFile(path);
                     LogTool.AddLog($"文件还原成功！");
+
                     if (!backupDirs.Any())
                     {
-                        BackupHelper.ResetDir(new DirectoryInfo(path));
+                        // 还原文件夹
+                        BackupHelper.ResetDir(mainDir);
                         LogTool.AddLog($"文件夹还原成功！");
                     }
-                    return;
+                    throw new Exception($"备份文件失败，已回滚成功！");
+                    //return;
                 }
                 catch
                 {
@@ -177,18 +185,23 @@ namespace MAutoUpdate
                 //删除备份文件
                 LogTool.AddLog($"解压成功！准备删除备份文件");
                 BackupHelper.RemoveFile(path);
+
                 LogTool.AddLog("更新程序：删除备份成功");
                 OnUpdateProgess?.Invoke(90);
             }
             catch (Exception ex)
             {
                 //解压失败，尝试恢复文件
-                LogTool.AddLog($"解压异常！准备恢复文件\n{ex}");
+                LogTool.AddLog($"解压失败！准备恢复文件\n{ex}");
 
                 try
                 {
+                    // 移除不带备份标记的文件
+                    BackupHelper.RemoveNonBackupFile(path);
+                    // 恢复
                     BackupHelper.ResetFile(path);
-                    return;
+                    throw new Exception($"解压失败，已回滚成功！");
+                    //return;
                 }
                 catch
                 {

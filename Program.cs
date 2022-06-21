@@ -17,7 +17,7 @@ namespace MAutoUpdate
     {
         /// <summary>
         /// 程序主入口
-        /// 启动命令：MAutoUpdate.exe -main d:/main.exe -mainArgs "arg1" -upgradeZip d:/1.zip -upgrade d:/upgrade.json
+        /// 启动命令：MAutoUpdate.exe -upgrade d:/upgrade.json
         /// </summary>
         /// <param name="args"></param>
         [STAThread]
@@ -45,24 +45,39 @@ namespace MAutoUpdate
                 };
 
                 #region 处理命令行参数和配置文件
-                var asModel = AppSettingsTools.Get<AppSettingCfgModel>();
-                context.Init(asModel);
-
-                ArgumentModel argModel = CmdArgTools.GetArgumentModel(args);
-                if (argModel != null)
                 {
-                    context.Init(argModel);
+                    var asModel = AppSettingsTools.Get<AppSettingCfgModel>();
+                    context.Init(asModel);
+
+                    ArgumentModel argModel = CmdArgTools.GetArgumentModel(args);
+                    if (argModel != null)
+                    {
+                        context.Init(argModel);
+                    }
                 }
+                #endregion
+
+                if (context.UpgradeJsonFullName.IsNullOrEmpty()) throw new Exception($"请指定升级配置文件！");
+                if (!File.Exists(context.UpgradeJsonFullName)) throw new Exception($"升级配置文件不存在！path:{context.UpgradeJsonFullName}");
+
+                #region 解析升级Json
+                var json = File.ReadAllText(context.UpgradeJsonFullName);
+                context.UpgradeInfo = JsonNetHelper.DeserializeObject<UpgradeModel>(json);
+
+                #region 处理默认值
+                context.MainDisplayName = context.UpgradeInfo.MainAppDisplayName;
+                context.MainFullName = context.UpgradeInfo.MainAppFullName;
+
+                context.UpgradeZipFullName = context.UpgradeInfo.UpgradeZipFullName;
+
+                #endregion
+                #endregion
+                LogTool.AddLog($"context:{JsonNetHelper.SerializeObject(context)}");
+
+                if (context.UpgradeInfo.StartupExeFullName.IsNullOrEmpty()) throw new Exception($"启动程序路径未指定！");
 
                 if (string.IsNullOrEmpty(context.MainFullName)) throw new Exception($"主程序路径未指定！");
                 if (!File.Exists(context.MainFullName)) throw new Exception($"主程序路径不存在！");
-
-                LogTool.AddLog($"context:{JsonNetHelper.SerializeObject(context)}");
-                #endregion
-
-                // 解析升级Json
-                var json = File.ReadAllText(argModel.UpgradeJsonFullName);
-                context.UpgradeInfo = JsonNetHelper.DeserializeObject<UpgradeModel>(json);
 
                 //if (!resp.Upgrade)
                 //{
@@ -87,7 +102,7 @@ namespace MAutoUpdate
                     string result = Environment.GetEnvironmentVariable("systemdrive");
                     if (context.MainFullName.StartsWithIgnoreCase(result))
                     {
-                        ProcessTools.RestartWithUAC(argModel.GetStartupArgs());
+                        ProcessTools.RestartWithUAC(args);
                         return;
                     }
                     #endregion

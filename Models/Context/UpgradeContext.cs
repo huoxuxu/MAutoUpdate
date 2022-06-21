@@ -28,16 +28,15 @@ namespace MAutoUpdate.Models
         public String MainDisplayName { get; set; }
         /// <summary>主业务程序全路径</summary>
         public String MainFullName { get; set; }
-        /// <summary>主业务程序启动参数</summary>
-        public String MainArgs { get; set; }
+        ///// <summary>主业务程序启动参数</summary>
+        //public String MainArgs { get; set; }
 
-        /// <summary>升级压缩包全路径</summary>
-        public String UpgradeZipFullName { get; set; }
         /// <summary>升级Json文件全路径</summary>
         public String UpgradeJsonFullName { get; set; }
-
         /// <summary>升级信息</summary>
         public UpgradeModel UpgradeInfo { get; set; }
+        /// <summary>升级压缩包全路径</summary>
+        public String UpgradeZipFullName { get; set; }
 
         /// <summary>程序启动时间</summary>
         public DateTime StartupTime { get; set; } = DateTime.Now;
@@ -48,9 +47,10 @@ namespace MAutoUpdate.Models
         /// <param name="argModel"></param>
         public void Init(ArgumentModel argModel)
         {
-            this.MainFullName = argModel.MainExeFullName;
-            this.MainArgs = argModel.MainExeArgs;
-            this.UpgradeZipFullName = argModel.UpgradeZipFullName;
+            //this.MainFullName = argModel.MainExeFullName;
+            //this.MainArgs = argModel.MainExeArgs;
+
+            //this.UpgradeZipFullName = argModel.UpgradeZipFullName;
             this.UpgradeJsonFullName = argModel.UpgradeJsonFullName;
         }
 
@@ -60,9 +60,10 @@ namespace MAutoUpdate.Models
         /// <param name="cfg"></param>
         public void Init(AppSettingCfgModel cfg)
         {
-            this.MainDisplayName = cfg.MainDisplayName;
-            this.MainFullName = cfg.MainExeFullName;
-            this.MainArgs = cfg.MainExeArgs;
+            //this.MainDisplayName = cfg.MainDisplayName;
+            //this.MainFullName = cfg.MainExeFullName;
+            //this.MainArgs = cfg.MainExeArgs;
+
             this.UpgradeJsonFullName = cfg.UpgradeJsonFullName;
         }
 

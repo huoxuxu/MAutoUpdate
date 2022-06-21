@@ -49,7 +49,7 @@ namespace MAutoUpdate
                 catch (Exception ex)
                 {
                     LogTool.AddLog(ex + "");
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show($"出现异常：{ex.Message}");
                 }
             });
         }

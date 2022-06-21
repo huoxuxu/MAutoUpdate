@@ -39,7 +39,7 @@ namespace MAutoUpdate.Commons
         }
 
         /// <summary>
-        /// 传入的目录备份
+        /// 备份传入的目录。就是给传入的目录改个名字
         /// </summary>
         /// <param name="dir"></param>
         public static void RenameDir(DirectoryInfo dir)
@@ -48,6 +48,7 @@ namespace MAutoUpdate.Commons
             var destPath = $"{dirName}{SUFFIX}";
             if (File.Exists(destPath)) return;
 
+            addLog($"RENAME {dirName}=>{destPath}");
             dir.MoveTo(destPath);
         }
 
@@ -100,43 +101,71 @@ namespace MAutoUpdate.Commons
         }
 
         /// <summary>
-        /// 移除传入目录的所有备份文件和文件夹
+        /// 移除传入目录下的所有备份文件
         /// </summary>
         /// <param name="dirPath"></param>
         public static void RemoveFile(String dirPath)
         {
-            {
-                var files = Directory.GetFiles(dirPath, $"*{SUFFIX}");
-                if (!files.Any()) return;
+            var files = Directory.GetFiles(dirPath, $"*{SUFFIX}");
+            if (!files.Any()) return;
 
-                foreach (var file in files)
+            foreach (var file in files)
+            {
+                try
                 {
-                    try
-                    {
-                        File.Delete(file);
-                        addLog($"REMOVE {file}");
-                    }
-                    catch (Exception ex)
-                    {
-                        addLog(ex + "");
-                    }
+                    File.Delete(file);
+                    addLog($"REMOVE {file}");
+                }
+                catch (Exception ex)
+                {
+                    addLog(ex + "");
                 }
             }
-            {
-                var dirs = Directory.GetDirectories(dirPath, $"*{SUFFIX}");
-                if (!dirs.Any()) return;
+        }
 
-                foreach (var dir in dirs)
+        /// <summary>
+        /// 移除传入目录下的所有备份的文件夹
+        /// </summary>
+        /// <param name="dirPath"></param>
+        public static void RemoveDir(string dirPath)
+        {
+            var dirs = Directory.GetDirectories(dirPath, $"*{SUFFIX}");
+            if (!dirs.Any()) return;
+
+            foreach (var dir in dirs)
+            {
+                try
                 {
-                    try
-                    {
-                        Directory.Delete(dir);
-                        addLog($"REMOVE-DIR {dir}");
-                    }
-                    catch (Exception ex)
-                    {
-                        addLog(ex + "");
-                    }
+                    Directory.Delete(dir, true);
+                    addLog($"REMOVE-DIR {dir}");
+                }
+                catch (Exception ex)
+                {
+                    addLog(ex + "");
+                }
+            }
+
+        }
+
+        /// <summary>移除不带备份标记的文件</summary>
+        /// <param name="dirPath"></param>
+        public static void RemoveNonBackupFile(string dirPath)
+        {
+            var files = Directory.GetFiles(dirPath);
+            if (!files.Any()) return;
+
+            foreach (var file in files)
+            {
+                try
+                {
+                    if (file.EndsWithIgnoreCase(SUFFIX)) continue;
+
+                    File.Delete(file);
+                    addLog($"REMOVE {file}");
+                }
+                catch (Exception ex)
+                {
+                    addLog(ex + "");
                 }
             }
         }
@@ -146,6 +175,7 @@ namespace MAutoUpdate.Commons
         {
             LogTool.AddLog(log);
         }
+
 
     }
 }
