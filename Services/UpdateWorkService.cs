@@ -80,7 +80,7 @@ namespace MAutoUpdate
                 OnUpdateProgess?.Invoke(5);
 
                 // 下载文件
-                downloadByUrl(upgradeInfo.UpgradeZipPackageUrl, zipFullPath, 5, 65);
+                downloadByUrl(upgradeInfo.UpgradeZipPackageUrl, zipFullPath, 5, 70);
             }
             else
             {
@@ -88,7 +88,7 @@ namespace MAutoUpdate
                 zipFileInfo = new FileInfo(this.context.UpgradeZipFullName);
 
                 LogTool.AddLog("更新程序：解压升级" + this.context.UpgradeZipFullName);
-                OnUpdateProgess?.Invoke(65);
+                OnUpdateProgess?.Invoke(70);
             }
 
             #region 升级前置条件
@@ -104,7 +104,7 @@ namespace MAutoUpdate
                 if (!fileMD5.EqualIgnoreCase(upgradeInfo.UpgradeZipPackageMD5))
                     throw new Exception($"文件Hash校验失败！");
             }
-            OnUpdateProgess?.Invoke(70);
+            OnUpdateProgess?.Invoke(72);
 
             // 杀进程
             var kills = context.UpgradeInfo.KillExeNameArr ?? new List<String>();
@@ -196,9 +196,14 @@ namespace MAutoUpdate
             {
                 OnUpdateMilestone?.Invoke($"正在解压升级包...");
                 LogTool.AddLog($"更新程序：解压{this.context.UpgradeZipFullName}");
-                MyExt.ICSharpCodeSharpZipLib.ICSharpCodeSharpZipLibTools.UnZip(zipFileInfo, mainExeFileInfo.Directory);
+                MyExt.ICSharpCodeSharpZipLib.ICSharpCodeSharpZipLibTools.UnZipWithProgress(zipFileInfo, mainExeFileInfo.Directory, unzipRate =>
+                {
+                    var rate = 81 + ((97 - 81) / 100d * unzipRate);
+                    rate = Math.Round(rate, 2);
+                    OnUpdateProgess?.Invoke(rate);
+                });
                 LogTool.AddLog($"更新程序：{this.context.UpgradeZipFullName} 解压完成");
-                OnUpdateProgess?.Invoke(85);
+                OnUpdateProgess?.Invoke(98);
 
                 //删除备份文件
                 OnUpdateMilestone?.Invoke($"正在移除备份...");
@@ -206,7 +211,7 @@ namespace MAutoUpdate
                 BackupHelper.RemoveFile(path);
 
                 LogTool.AddLog("更新程序：删除备份成功");
-                OnUpdateProgess?.Invoke(90);
+                OnUpdateProgess?.Invoke(99);
             }
             catch (Exception ex)
             {
