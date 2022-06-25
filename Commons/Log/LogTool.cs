@@ -19,7 +19,7 @@ namespace MAutoUpdate
             }
             using (StreamWriter sw = File.AppendText(Path.Combine(temp, @"log\update.log")))
             {
-                sw.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff} value");
+                sw.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff} {value}");
             }
         }
     }

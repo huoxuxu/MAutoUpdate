@@ -14,32 +14,34 @@ namespace MAutoUpdate.Services
         /// 计算需要备份的文件
         /// </summary>
         /// <param name="context"></param>
-        public static List<BackupFileModel> Calc(UpgradeContext context, DirectoryInfo upgradeDir)
+        /// <param name="backupFiles">需要备份的文件</param>
+        public static List<BackupFileModel> Calc(UpgradeContext context, List<String> backupFiles)
         {
             var appBackupFiles = new List<BackupFileModel>();
-
-            // 找到需要备份的文件和文件夹
-            // 需要备份的文件
-            var backupFiles = new List<FileInfo>();
-            upgradeDir.Foreach(fileAct: file =>
-            {
-                backupFiles.Add(file);
-            });
 
             // 判断对应安装目录是否存在此文件
             var mainFile = new FileInfo(context.MainFullName);
             foreach (var item in backupFiles)
             {
-                var fn = item.FullName.DirFormat();
-                var ud = upgradeDir.FullName.DirFormat();
-                var fname = fn.SubString2(ud);
-                if (fname.IsNullOrEmpty()) continue;
-
-                var appFileFName = Path.Combine(mainFile.DirectoryName, fname);
+                var appFileFName = Path.Combine(mainFile.DirectoryName, item);
                 var appFile = new FileInfo(appFileFName);
-                if (appFile.Exists)
+                if (!appFile.Exists)
                 {
-                    appBackupFiles.Add(new BackupFileModel { BkFile = appFile, FromUpgrade = true });
+                    appBackupFiles.Add(new BackupFileModel
+                    {
+                        BkFile = appFile,
+                        FromEnum = FileFromEnum.Upgrade
+                    });
+                }
+                else
+                {
+                    var md5 = HashTools.CalcMD5(appFile);
+                    appBackupFiles.Add(new BackupFileModel
+                    {
+                        BkFile = appFile,
+                        FromEnum = FileFromEnum.Original,
+                        MD5 = md5,
+                    });
                 }
             }
 
@@ -49,6 +51,7 @@ namespace MAutoUpdate.Services
             {
                 var dn = Path.Combine(mainFile.DirectoryName, item);
                 var appBkDir = new DirectoryInfo(dn);
+                // 跳过无效备份目录
                 if (!appBkDir.Exists) continue;
 
                 appBkDir.Foreach(fileAct: file =>
@@ -57,7 +60,7 @@ namespace MAutoUpdate.Services
                     appBackupFiles.Add(new BackupFileModel
                     {
                         BkFile = file,
-                        FromUpgrade = false,
+                        FromEnum = FileFromEnum.Original,
                         MD5 = md5
                     });
                 });
@@ -89,7 +92,33 @@ namespace MAutoUpdate.Services
             {
                 foreach (var item in bkls)
                 {
-                    BackupHelper.RenameFile(item.BkFile);
+                    if (item.FromEnum == FileFromEnum.Original && item.BkFile.Exists)
+                    {
+                        BackupHelper.RenameFile(item.BkFile);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("备份失败！", ex);
+            }
+        }
+
+        /// <summary>
+        /// 移除备份文件
+        /// </summary>
+        /// <param name="bkls"></param>
+        /// <exception cref="Exception"></exception>
+        public static void Remove(List<BackupFileModel> bkls)
+        {
+            try
+            {
+                foreach (var item in bkls)
+                {
+                    if (item.FromEnum == FileFromEnum.Original && item.BkFile.Exists)
+                    {
+                        BackupHelper.RemoveFile(item.BkFile);
+                    }
                 }
             }
             catch (Exception ex)

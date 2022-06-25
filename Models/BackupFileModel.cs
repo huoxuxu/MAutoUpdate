@@ -10,11 +10,19 @@ namespace MAutoUpdate.Models
     {
         public FileInfo BkFile { get; set; }
 
-        /// <summary>来自升级包</summary>
-        public bool FromUpgrade { get; set; }
+        /// <summary>来自升级包或原始目录</summary>
+        public FileFromEnum FromEnum { get; set; }
 
         /// <summary>MD5</summary>
         public String MD5 { get; set; }
 
+    }
+
+    public enum FileFromEnum
+    {
+        /// <summary>升级包</summary>
+        Upgrade = 10,
+        /// <summary>安装目录</summary>
+        Original = 20,
     }
 }

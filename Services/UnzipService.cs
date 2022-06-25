@@ -10,6 +10,19 @@ namespace MAutoUpdate.Services
     public class UnzipService
     {
         /// <summary>
+        /// 获取压缩包内所有文件
+        /// </summary>
+        /// <param name="zipFile"></param>
+        /// <param name="zipEntryCount"></param>
+        /// <returns></returns>
+        public static List<String> GetUnzipFiles(FileInfo zipFile, out int zipEntryCount)
+        {
+            var ls = MyExt.ICSharpCodeSharpZipLib.ICSharpCodeSharpZipLibTools.GetFiles(zipFile, out zipEntryCount);
+
+            return ls;
+        }
+
+        /// <summary>
         /// 解压到临时目录，返回解压到的目录
         /// </summary>
         /// <param name="context"></param>
@@ -22,9 +35,9 @@ namespace MAutoUpdate.Services
             var unzipDir = new DirectoryInfo(unzipFullPath);
             if (!unzipDir.Exists) unzipDir.Create();
 
-            var zipPath = new FileInfo(context.UpgradeZipFullName);
+            var zipFile = new FileInfo(context.UpgradeZipFullName);
             // 开始解压
-            var cou = MyExt.ICSharpCodeSharpZipLib.ICSharpCodeSharpZipLibTools.UnZip(zipPath, unzipDir);
+            var cou = MyExt.ICSharpCodeSharpZipLib.ICSharpCodeSharpZipLibTools.UnZip(zipFile, unzipDir);
             zipEntryCount = cou;
 
             return unzipDir;

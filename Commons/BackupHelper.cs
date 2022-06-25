@@ -30,6 +30,22 @@ namespace MAutoUpdate.Commons
         }
 
         /// <summary>
+        /// 移除原始文件对应的备份文件
+        /// </summary>
+        /// <param name="originalFile"></param>
+        public static void RemoveFile(FileInfo originalFile)
+        {
+            var fileName = originalFile.FullName;
+            if (fileName.EndsWith(SUFFIX, StringComparison.OrdinalIgnoreCase)) return;
+
+            var destPath = $"{fileName}{SUFFIX}";
+            if (!File.Exists(destPath)) return;
+
+            File.Delete(destPath);
+            addLog($"REMOVE {destPath}");
+        }
+
+        /// <summary>
         /// 还原原始文件,
         /// 如果原始文件已存在，则删除
         /// </summary>

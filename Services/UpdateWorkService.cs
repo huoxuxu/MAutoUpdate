@@ -133,13 +133,16 @@ namespace MAutoUpdate
             var mainDir = new DirectoryInfo(path);
 
             #region 备份
-            // 解压到临时目录
-            LogTool.AddLog("更新程序：准备解压到临时目录");
-            var unzipDir = UnzipService.UnzipToTmp(context, out var zipCount);
-            LogTool.AddLog($"更新程序：解压到临时目录：{unzipDir}");
+            //// 解压到临时目录 360可能会弹窗
+            //LogTool.AddLog("更新程序：准备解压到临时目录");
+            //var unzipDir = UnzipService.UnzipToTmp(context, out var zipCount);
+            //LogTool.AddLog($"更新程序：解压到临时目录：{unzipDir}");
+
+            // 获取压缩包内文件集合
+            List<String> zipEntryFiles = UnzipService.GetUnzipFiles(zipFileInfo, out var zipEntryCount);
 
             // 计算后需要备份的文件
-            var calcBackupFiles = BackupService.Calc(context, unzipDir);
+            var calcBackupFiles = BackupService.Calc(context, zipEntryFiles);
             LogTool.AddLog($"更新程序：计算后需要备份的文件个数：{calcBackupFiles?.Count ?? 0}");
             if (calcBackupFiles?.Any() == true)
             {
@@ -158,19 +161,20 @@ namespace MAutoUpdate
             {
                 OnUpdateMilestone?.Invoke($"正在解压升级包...");
                 LogTool.AddLog($"更新程序：解压{this.context.UpgradeZipFullName}");
-                MyExt.ICSharpCodeSharpZipLib.ICSharpCodeSharpZipLibTools.UnZipWithProgress(zipFileInfo, mainExeFileInfo.Directory, unzipRate =>
+                MyExt.ICSharpCodeSharpZipLib.ICSharpCodeSharpZipLibTools.UnZipWithProgress(zipFileInfo, mainExeFileInfo.Directory, zipEntryCount, unzipRate =>
                 {
                     var rate = 81 + ((97 - 81) / 100d * unzipRate);
                     rate = Math.Round(rate, 2);
                     OnUpdateProgess?.Invoke(rate);
+                    LogTool.AddLog($"更新程序：解压进度 {unzipRate}");
                 });
-                LogTool.AddLog($"更新程序：{this.context.UpgradeZipFullName} 解压完成");
+                LogTool.AddLog($"更新程序：解压完成 {this.context.UpgradeZipFullName}");
                 OnUpdateProgess?.Invoke(98);
 
                 //删除备份文件
                 OnUpdateMilestone?.Invoke($"正在移除备份...");
                 LogTool.AddLog($"解压成功！准备删除备份文件");
-                BackupHelper.RemoveFile(path);
+                BackupService.Remove(calcBackupFiles);
 
                 LogTool.AddLog("更新程序：删除备份成功");
                 OnUpdateProgess?.Invoke(99);
