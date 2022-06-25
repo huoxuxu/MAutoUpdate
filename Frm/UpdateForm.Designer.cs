@@ -40,7 +40,7 @@
             // 
             this.updateBar.BackColor = System.Drawing.Color.Lime;
             this.updateBar.Location = new System.Drawing.Point(53, 374);
-            this.updateBar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.updateBar.Margin = new System.Windows.Forms.Padding(4);
             this.updateBar.Name = "updateBar";
             this.updateBar.Size = new System.Drawing.Size(679, 35);
             this.updateBar.TabIndex = 24;
@@ -63,7 +63,7 @@
             this.lblMilestone.BackColor = System.Drawing.Color.Transparent;
             this.lblMilestone.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Bold);
             this.lblMilestone.ForeColor = System.Drawing.Color.DimGray;
-            this.lblMilestone.Location = new System.Drawing.Point(143, 304);
+            this.lblMilestone.Location = new System.Drawing.Point(113, 304);
             this.lblMilestone.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMilestone.Name = "lblMilestone";
             this.lblMilestone.Size = new System.Drawing.Size(543, 24);
@@ -86,10 +86,10 @@
             this.lblUpgradeRate.BackColor = System.Drawing.Color.Transparent;
             this.lblUpgradeRate.Font = new System.Drawing.Font("微软雅黑", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lblUpgradeRate.ForeColor = System.Drawing.Color.DimGray;
-            this.lblUpgradeRate.Location = new System.Drawing.Point(140, 430);
+            this.lblUpgradeRate.Location = new System.Drawing.Point(110, 423);
             this.lblUpgradeRate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblUpgradeRate.Name = "lblUpgradeRate";
-            this.lblUpgradeRate.Size = new System.Drawing.Size(543, 58);
+            this.lblUpgradeRate.Size = new System.Drawing.Size(546, 58);
             this.lblUpgradeRate.TabIndex = 28;
             this.lblUpgradeRate.Text = "0%";
             this.lblUpgradeRate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -106,7 +106,7 @@
             this.Controls.Add(this.updateBar);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "UpdateForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "UpdateForm";
