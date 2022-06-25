@@ -63,6 +63,7 @@ namespace MAutoUpdate
 
             var upgradeInfo = context.UpgradeInfo;
             var mainExeFileInfo = new FileInfo(context.MainFullName);
+            // 升级文件压缩包
             FileInfo zipFileInfo;
 
             // 判断是否走直接解压升级
@@ -72,15 +73,14 @@ namespace MAutoUpdate
                 // 升级压缩包全路径
                 var mainExeName = Path.GetFileNameWithoutExtension(mainExeFileInfo.Name);
                 var zipName = $"{mainExeName}_{upgradeInfo.LastVersion}";
-                var zipFullPath = Path.Combine(tempPath, $"{zipName}.zip");
-                this.context.UpgradeZipFullName = zipFullPath;
+                this.context.UpgradeZipFullName = Path.Combine(tempPath, $"{mainExeName}/{zipName}.zip");
 
                 zipFileInfo = new FileInfo(this.context.UpgradeZipFullName);
                 if (zipFileInfo.Exists) zipFileInfo.Delete();
                 OnUpdateProgess?.Invoke(5);
 
                 // 下载文件
-                downloadByUrl(upgradeInfo.UpgradeZipPackageUrl, zipFullPath, 5, 70);
+                downloadByUrl(upgradeInfo.UpgradeZipPackageUrl, zipFileInfo.FullName, 5, 70);
             }
             else
             {
@@ -96,13 +96,12 @@ namespace MAutoUpdate
             if (!upgradeInfo.UpgradeZipPackageMD5.IsNullOrWhiteSpace())
             {
                 OnUpdateMilestone?.Invoke($"正在校验升级包...");
-                var fileMD5 = HashHelper.GetFileMd5(this.context.UpgradeZipFullName);
+                var flag = HashTools.CheckMD5(zipFileInfo, upgradeInfo.UpgradeZipPackageMD5, out var fileMD5);
                 LogTool.AddLog($"计算文件MD5值：{fileMD5} " +
                     $"预期MD5值：{upgradeInfo.UpgradeZipPackageMD5} " +
-                    $"path:{this.context.UpgradeZipFullName}");
+                    $"path:{zipFileInfo.FullName}");
 
-                if (!fileMD5.EqualIgnoreCase(upgradeInfo.UpgradeZipPackageMD5))
-                    throw new Exception($"文件Hash校验失败！");
+                if (!flag) throw new Exception($"升级包Hash校验失败！");
             }
             OnUpdateProgess?.Invoke(72);
 
@@ -132,62 +131,25 @@ namespace MAutoUpdate
 
             var path = mainExeFileInfo.DirectoryName;
             var mainDir = new DirectoryInfo(path);
-            // 备份 & 更新
-            #region 备份文件
-            LogTool.AddLog("更新程序：准备执行备份操作");
-            var backupDirs = upgradeInfo.BackupDirs ?? new List<string>();
-            try
+
+            #region 备份
+            // 解压到临时目录
+            LogTool.AddLog("更新程序：准备解压到临时目录");
+            var unzipDir = UnzipService.UnzipToTmp(context, out var zipCount);
+            LogTool.AddLog($"更新程序：解压到临时目录：{unzipDir}");
+
+            // 计算后需要备份的文件
+            var calcBackupFiles = BackupService.Calc(context, unzipDir);
+            LogTool.AddLog($"更新程序：计算后需要备份的文件个数：{calcBackupFiles?.Count ?? 0}");
+            if (calcBackupFiles?.Any() == true)
             {
-                //备份文件
-                OnUpdateMilestone?.Invoke($"正在备份...");
-                // 备份主程序目录中的文件
-                BackupHelper.RenameFile(path);
+                LogTool.AddLog($"更新程序：校验待备份文件占用情况");
+                BackupService.CheckFileShare(calcBackupFiles);
 
-                // 备份文件夹
-                LogTool.AddLog($"更新程序：备份的目录：{upgradeInfo.BackupDirs.Join(", ")}");
-                var appPath = UpgradeContext.AppPath.DirFormat();
-                foreach (var backupDir in backupDirs)
-                {
-                    var bkPath = Path.Combine(path, backupDir).DirFormat();
-                    var bk = new DirectoryInfo(bkPath);
-                    if (!bk.Exists) continue;
-
-                    // 过滤掉升级程序所在目录
-                    if (appPath.EqualIgnoreCase(bkPath))
-                    {
-                        LogTool.AddLog("更新程序：过滤掉升级程序所在目录");
-                        continue;
-                    }
-
-                    BackupHelper.RenameDir(bk);
-                }
-                LogTool.AddLog("更新程序：执行备份成功");
-                OnUpdateProgess?.Invoke(80);
-            }
-            catch (Exception ex)
-            {
-                LogTool.AddLog($"备份文件失败，准备恢复文件！：{ex}");
-
-                try
-                {
-                    // 还原文件
-                    BackupHelper.ResetFile(path);
-                    LogTool.AddLog($"文件还原成功！");
-
-                    if (!backupDirs.Any())
-                    {
-                        // 还原文件夹
-                        BackupHelper.ResetDir(mainDir);
-                        LogTool.AddLog($"文件夹还原成功！");
-                    }
-                    throw new Exception($"备份文件失败，已回滚成功！");
-                    //return;
-                }
-                catch
-                {
-                    LogTool.AddLog($"备份文件失败, 文件还原失败！");
-                    throw;
-                }
+                // 开始备份
+                LogTool.AddLog($"更新程序：开始备份");
+                BackupService.Backup(calcBackupFiles);
+                LogTool.AddLog($"更新程序：执行备份成功");
             }
             #endregion
 
@@ -220,20 +182,17 @@ namespace MAutoUpdate
 
                 try
                 {
-                    // 移除不带备份标记的文件
-                    BackupHelper.RemoveNonBackupFile(path);
-                    // 恢复
-                    BackupHelper.ResetFile(path);
+                    // 还原
+                    BackupService.Reset(calcBackupFiles);
                     throw new Exception($"解压失败，已回滚成功！");
                     //return;
                 }
-                catch
+                catch (Exception ex2)
                 {
                     //还原失败！
-                    LogTool.AddLog($"还原文件异常！");
+                    LogTool.AddLog($"还原文件异常！\n{ex2}");
                     throw;
                 }
-
             }
             #endregion
             OnUpdateProgess?.Invoke(100);

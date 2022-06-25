@@ -11,16 +11,14 @@ namespace MAutoUpdate.Services
     /// <summary></summary>
     public class AppInitService
     {
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary></summary>
         /// <param name="args"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public static UpgradeContext InitContext(string[] args)
         {
             // 更新上下文
-            UpgradeContext context = new UpgradeContext()
+            var context = new UpgradeContext()
             {
                 IsAdmin = WindowsIdentityTools.IsAdmin(),
             };
@@ -57,10 +55,14 @@ namespace MAutoUpdate.Services
             context.UpgradeZipFullName = context.UpgradeInfo.UpgradeZipFullName;
 
             if (context.UpgradeInfo.LastVersion.IsNullOrWhiteSpace())
-                context.UpgradeInfo.LastVersion = "";
+                context.UpgradeInfo.LastVersion = "未知";
             if (context.UpgradeInfo.UpgradeContent.IsNullOrWhiteSpace())
-                context.UpgradeInfo.UpgradeContent = "";
+                context.UpgradeInfo.UpgradeContent = "发现新版本...";
 
+            if (context.UpgradeInfo.StartupExeFullName.IsNullOrEmpty())
+            {
+                context.UpgradeInfo.StartupExeFullName = context.MainFullName;
+            }
             #endregion
             #endregion
             LogTool.AddLog($"context:{JsonNetHelper.SerializeObject(context)}");
@@ -71,7 +73,6 @@ namespace MAutoUpdate.Services
             if (string.IsNullOrEmpty(context.MainFullName)) throw new Exception($"主程序路径未指定！");
             if (!File.Exists(context.MainFullName)) throw new Exception($"主程序路径不存在！");
 
-            if (context.UpgradeInfo.StartupExeFullName.IsNullOrEmpty()) throw new Exception($"启动程序路径未指定！");
             #endregion
 
             return context;

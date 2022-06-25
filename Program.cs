@@ -32,7 +32,9 @@ namespace MAutoUpdate
                 LogTool.AddLog($"================================");
                 LogTool.AddLog($"开始更新...");
                 LogTool.AddLog($"================================");
-
+                {
+                    //var f1 = FileTools.CanShare(new FileInfo($"d:/1.xlsx"));
+                }
                 #region Mutex 更新程序不能存在多个
                 var fVerInfo = Process.GetCurrentProcess().MainModule.FileVersionInfo;
                 var mutexName = $"{fVerInfo.FileName.Replace("\\", "_").Replace("/", "_")}_{fVerInfo.FileVersion}_Mutex";

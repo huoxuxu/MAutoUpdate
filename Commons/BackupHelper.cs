@@ -11,7 +11,42 @@ namespace MAutoUpdate.Commons
     public class BackupHelper
     {
         //备份文件的后缀
-        private const String SUFFIX = "-backup";
+        public const String SUFFIX = "-backup";
+
+        /// <summary>
+        /// 将指定文件备份，如果备份存在会移除备份
+        /// </summary>
+        /// <param name="file"></param>
+        public static void RenameFile(FileInfo file)
+        {
+            var fileName = file.FullName;
+            if (fileName.EndsWith(SUFFIX, StringComparison.OrdinalIgnoreCase)) return;
+
+            var destPath = $"{fileName}{SUFFIX}";
+            if (File.Exists(destPath)) File.Delete(destPath);
+
+            addLog($"RENAME {fileName}=>{destPath}");
+            File.Move(fileName, destPath);
+        }
+
+        /// <summary>
+        /// 还原原始文件,
+        /// 如果原始文件已存在，则删除
+        /// </summary>
+        /// <param name="originalFile">原始的文件，不是备份后的</param>
+        public static void ResetFile(FileInfo originalFile)
+        {
+            var fileName = originalFile.FullName;
+            if (fileName.EndsWith(SUFFIX, StringComparison.OrdinalIgnoreCase)) return;
+
+            var destPath = $"{fileName}{SUFFIX}";
+            if (!File.Exists(destPath)) return;
+
+            if (originalFile.Exists) originalFile.Delete();
+
+            addLog($"RESET {destPath}=>{fileName}");
+            File.Move(destPath, fileName);
+        }
 
         /// <summary>
         /// 将指定文件夹的文件改名，
