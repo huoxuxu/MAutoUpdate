@@ -10,7 +10,7 @@ namespace MAutoUpdate.Commons
         /// <summary>
         /// 处理启动参数
         /// </summary>
-        /// <param name="args">-main d:/main.exe -upgrade d:/upgrade.json</param>
+        /// <param name="args">-upgrade d:/upgrade.json</param>
         /// <returns></returns>
         public static ArgumentModel GetArgumentModel(string[] args)
         {

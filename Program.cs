@@ -10,6 +10,7 @@ using MAutoUpdate.Commons;
 using MAutoUpdate.Models;
 using MAutoUpdate.Services;
 using MAutoUpdate.Models.Upgrade;
+using HTools;
 
 namespace MAutoUpdate
 {

@@ -36,18 +36,10 @@ namespace MAutoUpdate
 
             using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, bufArr.Length, true))
             {
-                hc.HttpWebRequest.GetStream((buffer, offset, count) =>
+                using (var resp = hc.HttpWebRequest.ReadResponse())
                 {
-                    cou += count;
-                    rate = (int)((cou * 1d / fileSize) * 100);
-                    if (rate > lastRate)
-                    {
-                        act(rate);
-                        lastRate = rate;
-                    }
-
-                    fs.Write(buffer, offset, count);
-                });
+                    resp.ReadStream(fs, act);
+                }
             }
         }
 

@@ -86,16 +86,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\HXXLib\HTools\Tools\App升级\FileBackupHelper.cs">
+      <Link>Commons\File\FileBackupHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\HXXLib\HTools\进程\ProcessTools.cs">
+      <Link>Commons\进程\ProcessTools.cs</Link>
+    </Compile>
     <Compile Include="..\HXXLib\MyExt.ICSharpCodeSharpZipLib\ICSharpCodeSharpZipLibTools.cs">
       <Link>Commons\Zip\ICSharpCodeSharpZipLibTools.cs</Link>
     </Compile>
     <Compile Include="Commons\Config\AppSettingsTools.cs" />
-    <Compile Include="Commons\BackupHelper.cs" />
     <Compile Include="Commons\File\FileTools.cs" />
     <Compile Include="Commons\Http\DownLoadTools.cs" />
     <Compile Include="Commons\Hash\HashTools.cs" />
     <Compile Include="Commons\Json\JsonNetHelper.cs" />
-    <Compile Include="Commons\ProcessTools.cs" />
     <Compile Include="Frm\FrmAsk.cs">
       <SubType>Form</SubType>
     </Compile>

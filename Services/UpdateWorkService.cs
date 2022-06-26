@@ -11,6 +11,7 @@ using System.Xml;
 using MAutoUpdate.Commons;
 using MAutoUpdate.Models;
 using MAutoUpdate.Services;
+using HTools;
 
 namespace MAutoUpdate
 {

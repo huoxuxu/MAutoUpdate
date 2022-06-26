@@ -94,7 +94,7 @@ namespace MAutoUpdate.Services
                 {
                     if (item.FromEnum == FileFromEnum.Original && item.BkFile.Exists)
                     {
-                        BackupHelper.RenameFile(item.BkFile);
+                        FileBackupHelper.RenameFile(item.BkFile, log => LogTool.AddLog(log));
                     }
                 }
             }
@@ -117,7 +117,7 @@ namespace MAutoUpdate.Services
                 {
                     if (item.FromEnum == FileFromEnum.Original && item.BkFile.Exists)
                     {
-                        BackupHelper.RemoveFile(item.BkFile);
+                        FileBackupHelper.RemoveFile(item.BkFile, log => LogTool.AddLog(log));
                     }
                 }
             }
@@ -150,7 +150,7 @@ namespace MAutoUpdate.Services
                         }
                     }
 
-                    BackupHelper.ResetFile(item.BkFile);
+                    FileBackupHelper.ResetFile(item.BkFile, log => LogTool.AddLog(log));
 
                     if (!item.MD5.IsNullOrEmpty())
                     {
