@@ -1,17 +1,22 @@
 {
   "MainAppDisplayName": "大宝剑",
+  // 支持全路径和相对工作目录的路径
   "MainAppFullName": "d:/tmp/demo/demo.exe",
 
   "LastVersion": "1.21.0619",
   "UpgradeZipPackageUrl": "http://127.0.0.1:2121/tmp/demo-1.0.0.zip",
   "UpgradeZipPackageMD5": "",
   "UpgradeContent": "版本：V1.21.0619\n升级内容：\r\n1.XXXX\r\n2.YYYY",
+  // 支持全路径和相对工作目录的路径
   "UpgradeZipFullName": "",
 
+  // 支持全路径和相对工作目录的路径
   "StartupExeFullName": "d:/tmp/demo/demo.exe",
   "StartupExeArgs": "",
 
+  // 相对于主程序根目录
   "BackupDirs": [ "Data", "locales", "BarCode" ],
+  // 需要kill的进程名，如 abc.exe
   "KillExeNameArr": [],
 
   "SilentUpgrade": false

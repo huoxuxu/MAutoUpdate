@@ -33,7 +33,7 @@ namespace MAutoUpdate.Models
         ///// <summary>主业务程序启动参数</summary>
         //public String MainArgs { get; set; }
 
-        /// <summary>升级Json文件全路径</summary>
+        /// <summary>升级Json文件全路径，也可支持相对于工作目录的相对路径</summary>
         public String UpgradeJsonFullName { get; set; }
         /// <summary>升级信息</summary>
         public UpgradeModel UpgradeInfo { get; set; }

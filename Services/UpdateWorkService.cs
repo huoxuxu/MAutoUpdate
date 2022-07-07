@@ -197,13 +197,25 @@ namespace MAutoUpdate
             LogTool.AddLog($"更新程序：计算后需要备份的文件个数：{calcBackupFiles?.Count ?? 0}");
             if (calcBackupFiles?.Any() == true)
             {
-                //LogTool.AddLog($"更新程序：校验待备份文件占用情况");
-                //BackupService.CheckFileShare(calcBackupFiles);
+                foreach (var item in calcBackupFiles)
+                {
+                    LogTool.AddLog($"待备份文件：{item.FromEnum} {item.BkFile} {item.MD5}");
+                }
 
                 // 开始备份
-                LogTool.AddLog($"更新程序：开始备份");
-                BackupService.Backup(calcBackupFiles);
-                LogTool.AddLog($"更新程序：执行备份成功");
+                try
+                {
+                    LogTool.AddLog($"更新程序：开始备份");
+                    var cou = BackupService.Backup(calcBackupFiles);
+                    LogTool.AddLog($"更新程序：执行备份成功 {cou} 个");
+                }
+                catch (Exception ex)
+                {
+                    LogTool.AddLog($"备份出现异常：{ex}");
+                    // 开始还原
+                    BackupService.Reset(calcBackupFiles);
+                    throw new Exception($"备份失败，已还原成功！");
+                }
             }
             #endregion
 
@@ -226,8 +238,8 @@ namespace MAutoUpdate
                 OnUpdateMilestone?.Invoke($"正在移除备份...");
                 LogTool.AddLog($"解压成功！准备删除备份文件");
                 BackupService.Remove(calcBackupFiles);
-
                 LogTool.AddLog("更新程序：删除备份成功");
+
                 OnUpdateProgess?.Invoke(99);
             }
             catch (Exception ex)
@@ -250,10 +262,42 @@ namespace MAutoUpdate
                 }
             }
             #endregion
+
+            // 静默更新时拉起进程
+            if (upgradeInfo.SilentUpgrade)
+            {
+                StartMainApp();
+
+                // 等待主进程启动
+                Thread.Sleep(3000);
+            }
+
             OnUpdateProgess?.Invoke(100);
             OnUpdateMilestone?.Invoke($"恭喜您，升级完成！");
 
             LogTool.AddLog("更新程序：更新完成！");
+        }
+
+        /// <summary>
+        /// 启动主进程
+        /// </summary>
+        public void StartMainApp()
+        {
+            var upgradeInfo = context.UpgradeInfo;
+
+            var startupExe = upgradeInfo.StartupExeFullName;
+            var startupExeArgs = upgradeInfo.StartupExeArgs;
+
+            // 启动主程序
+            LogTool.AddLog($"更新程序：启动 {startupExe} {startupExeArgs}");
+            if (startupExeArgs.IsNullOrEmpty())
+            {
+                System.Diagnostics.Process.Start(startupExe);
+            }
+            else
+            {
+                System.Diagnostics.Process.Start(startupExe, startupExeArgs);
+            }
         }
 
 

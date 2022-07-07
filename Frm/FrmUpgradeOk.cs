@@ -87,7 +87,8 @@ namespace MAutoUpdate
                 System.Diagnostics.Process.Start(startupExe, startupExeArgs);
             }
 
-            Thread.Sleep(800);
+            // 等待主进程启动
+            Thread.Sleep(3000);
 
             this.DialogResult = DialogResult.OK;
         }

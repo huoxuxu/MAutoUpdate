@@ -89,17 +89,22 @@ namespace MAutoUpdate.Services
         /// <summary>备份</summary>
         /// <param name="bkls"></param>
         /// <exception cref="Exception"></exception>
-        public static void Backup(List<BackupFileModel> bkls)
+        /// <returns>返回备份成功个数</returns>
+        public static int Backup(List<BackupFileModel> bkls)
         {
             try
             {
+                var num = 0;
                 foreach (var item in bkls)
                 {
                     if (item.FromEnum == FileFromEnum.Original && item.BkFile.Exists)
                     {
                         FileBackupHelper.RenameFile(item.BkFile, log => LogTool.AddLog(log));
+                        num++;
                     }
                 }
+
+                return num;
             }
             catch (Exception ex)
             {
@@ -152,8 +157,10 @@ namespace MAutoUpdate.Services
                             continue;
                         }
                     }
-
-                    FileBackupHelper.ResetFile(item.BkFile, log => LogTool.AddLog(log));
+                    else
+                    {
+                        FileBackupHelper.ResetFile(item.BkFile, log => LogTool.AddLog(log));
+                    }
 
                     if (!item.MD5.IsNullOrEmpty())
                     {
@@ -169,7 +176,7 @@ namespace MAutoUpdate.Services
             }
             catch (Exception ex)
             {
-                throw new Exception("备份失败！", ex);
+                throw new Exception("还原备份失败！", ex);
             }
         }
 
