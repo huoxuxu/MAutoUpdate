@@ -7,7 +7,7 @@ using MAutoUpdate.Models.Upgrade;
 
 namespace MAutoUpdate.Models
 {
-    /// <summary></summary>
+    /// <summary>更新上下文</summary>
     public class UpgradeContext
     {
         /// <summary>临时目录</summary>
@@ -20,6 +20,8 @@ namespace MAutoUpdate.Models
         public static string BakPath { get; set; } = Path.Combine(tmpFullPath, @"MAutoUpdate\bak\");
         /// <summary>升级应用运行全路径</summary>
         public static String AppPath { get; set; } = "".GetDLLRunDir();
+        /// <summary>工作目录</summary>
+        public static String WorkDirectory { get; set; } = Environment.CurrentDirectory;
 
         /// <summary>是否管理员权限执行</summary>
         public bool IsAdmin { get; set; }

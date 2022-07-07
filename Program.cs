@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using System.IO;
-using System.Net;
 using System.Diagnostics;
 using System.Threading;
-using System.Xml;
-using MAutoUpdate.Commons;
-using MAutoUpdate.Models;
+
 using MAutoUpdate.Services;
-using MAutoUpdate.Models.Upgrade;
 using HTools;
 
 namespace MAutoUpdate
@@ -72,12 +67,17 @@ namespace MAutoUpdate
                     #endregion
                 }
 
-                //// 静默更新
-                //if (resp.SilentUpgrade)
-                //{
-                //    updateWork.Do();
-                //    return;
-                //}
+                // 静默更新
+                if (context.UpgradeInfo.SilentUpgrade)
+                {
+                    LogTool.AddLog($"开始执行静默升级...");
+                    var updateService = new UpdateWorkService(context);
+                    updateService.Do();
+
+                    Thread.Sleep(400);
+                    Environment.Exit(0);
+                    return;
+                }
 
                 //// 强制更新
                 //if (resp.ForceUpgrade)

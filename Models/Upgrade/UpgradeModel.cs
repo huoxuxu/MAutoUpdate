@@ -37,6 +37,8 @@ namespace MAutoUpdate.Models.Upgrade
         /// <summary>升级时需要备份的目录</summary>
         public List<String> BackupDirs { get; set; }
 
+        /// <summary>静默更新</summary>
+        public Boolean SilentUpgrade { get; set; } = false;
 
     }
 }

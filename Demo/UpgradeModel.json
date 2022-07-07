@@ -12,5 +12,7 @@
   "StartupExeArgs": "",
 
   "BackupDirs": [ "Data", "locales", "BarCode" ],
-  "KillExeNameArr": []
+  "KillExeNameArr": [],
+
+  "SilentUpgrade": false
 }
