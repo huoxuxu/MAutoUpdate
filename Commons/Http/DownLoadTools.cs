@@ -28,9 +28,6 @@ namespace MAutoUpdate
 
             var fileSize = getFileSizeWithRetry(url);
 
-            var lastRate = 0;
-            var rate = 0;
-            var cou = 0;
             // 缓冲区
             var bufArr = new Byte[16 * 1024];
 
@@ -38,7 +35,7 @@ namespace MAutoUpdate
             {
                 using (var resp = hc.HttpWebRequest.ReadResponse())
                 {
-                    resp.ReadStream(fs, act);
+                    resp.ReadStream(fs, fileSize, act);
                 }
             }
         }

@@ -48,7 +48,8 @@ namespace MAutoUpdate.Commons
                 {
                     var md5Hash = crypto.ComputeHash(fs);
 
-                    return BitConverter.ToString(md5Hash);
+                    return BitConverter.ToString(md5Hash)
+                        .Replace("-", ""); ;
                 }
             }
         }

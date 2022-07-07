@@ -69,10 +69,13 @@ namespace MAutoUpdate.Services
             return appBackupFiles;
         }
 
-        /// <summary>校验文件是否被占用</summary>
+        /// <summary>
+        /// 校验文件是否被占用
+        /// 无法判断是否被独占
+        /// </summary>
         /// <param name="files"></param>
         /// <exception cref="Exception"></exception>
-        public static void CheckFileShare(List<BackupFileModel> files)
+        private static void CheckFileShare(List<BackupFileModel> files)
         {
             foreach (var item in files)
             {
@@ -123,7 +126,7 @@ namespace MAutoUpdate.Services
             }
             catch (Exception ex)
             {
-                throw new Exception("备份失败！", ex);
+                throw new Exception("移除备份失败！", ex);
             }
         }
 

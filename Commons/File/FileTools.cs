@@ -11,6 +11,7 @@ namespace MAutoUpdate.Commons
     {
         /// <summary>
         /// 是否可共享，true可以，false不可共享
+        /// 无法判断是否被独占
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
@@ -18,7 +19,7 @@ namespace MAutoUpdate.Commons
         {
             try
             {
-                using (file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+                using (file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
                 {
 
                 }

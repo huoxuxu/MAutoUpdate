@@ -77,6 +77,7 @@ namespace MAutoUpdate
                 this.context.UpgradeZipFullName = Path.Combine(tempPath, $"{mainExeName}/{zipName}.zip");
 
                 zipFileInfo = new FileInfo(this.context.UpgradeZipFullName);
+                if (!zipFileInfo.Directory.Exists) zipFileInfo.Directory.Create();
                 if (zipFileInfo.Exists) zipFileInfo.Delete();
                 OnUpdateProgess?.Invoke(5);
 
@@ -108,24 +109,73 @@ namespace MAutoUpdate
 
             // 杀进程
             var kills = context.UpgradeInfo.KillExeNameArr ?? new List<String>();
-            if (kills.Any())
+            kills.Add(mainExeFileInfo.Name);
+            var killProcName = new List<String>();
+            foreach (var item in kills)
             {
-                OnUpdateMilestone?.Invoke($"正在停止相关进程...");
+                var procName = Path.GetFileNameWithoutExtension(item);
+                killProcName.Add(procName);
+            }
+            LogTool.AddLog($"准备停止进程：[{killProcName.Join(", ")}]");
+            OnUpdateMilestone?.Invoke($"正在停止相关进程...");
 
-                var maxKillCount = 5;
-                int killCount = 0;
-                for (int i = 0; i < maxKillCount; i++)
+            var maxKillCount = 5;
+            var killOk = false;
+            for (int i = 0; i < maxKillCount; i++)
+            {
+                LogTool.AddLog($"准备停止进程,第{i + 1}次...");
+                // 没有停止成功的个数
+                var noKillAllCount = 0;
+                foreach (var item in killProcName)
                 {
-                    killCount = ProcessTools.KillAllProcess(kills.ToArray());
-                    if (killCount == 0) break;
+                    var procs = ProcessTools.GetProcessInfo(item);
+                    if (procs == null || procs.Length == 0)
+                    {
+                        LogTool.AddLog($"未找到进程：{item}");
+                        continue;
+                    }
 
-                    Thread.Sleep(500);
+                    LogTool.AddLog($"准备停止进程：{item}");
+                    // 没有停止成功的个数
+                    var noKillCount = 0;
+                    foreach (var proc in procs)
+                    {
+                        try
+                        {
+                            proc.Kill();
+                        }
+                        catch (Exception ex)
+                        {
+                            LogTool.AddLog($"停止进程 {proc.ProcessName} 失败！{ex}");
+                            noKillCount++;
+                        }
+                    }
+
+                    if (noKillCount > 0)
+                    {
+                        LogTool.AddLog($"停止进程 {item} 失败！");
+                        noKillAllCount++;
+                    }
+                    else
+                    {
+                        // 进程kill成功
+                    }
                 }
 
-                if (killCount > 0)
-                    throw new Exception($"进程自动结束失败，已重试 {maxKillCount} 次。"
-                        + $"请手动结束以下进程：\r\n{kills.Join("\r\n")}");
+                if (noKillAllCount == 0)
+                {
+                    LogTool.AddLog($"进程全部停止成功！");
+                    killOk = true;
+                    break;
+                }
+
+                Thread.Sleep(500);
             }
+
+            if (!killOk)
+                throw new Exception($"进程自动结束失败，已重试 {maxKillCount} 次。"
+                    + $"请手动结束以下进程：\r\n{killProcName.Join("\r\n")}");
+
             OnUpdateProgess?.Invoke(75);
 
             #endregion
@@ -147,8 +197,8 @@ namespace MAutoUpdate
             LogTool.AddLog($"更新程序：计算后需要备份的文件个数：{calcBackupFiles?.Count ?? 0}");
             if (calcBackupFiles?.Any() == true)
             {
-                LogTool.AddLog($"更新程序：校验待备份文件占用情况");
-                BackupService.CheckFileShare(calcBackupFiles);
+                //LogTool.AddLog($"更新程序：校验待备份文件占用情况");
+                //BackupService.CheckFileShare(calcBackupFiles);
 
                 // 开始备份
                 LogTool.AddLog($"更新程序：开始备份");
@@ -183,13 +233,13 @@ namespace MAutoUpdate
             catch (Exception ex)
             {
                 //解压失败，尝试恢复文件
-                LogTool.AddLog($"解压失败！准备恢复文件\n{ex}");
+                LogTool.AddLog($"更新失败！准备恢复文件\n{ex}");
 
                 try
                 {
                     // 还原
                     BackupService.Reset(calcBackupFiles);
-                    throw new Exception($"解压失败，已回滚成功！");
+                    throw new Exception($"更新失败，已回滚成功！");
                     //return;
                 }
                 catch (Exception ex2)
