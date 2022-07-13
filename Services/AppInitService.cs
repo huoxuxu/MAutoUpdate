@@ -37,16 +37,17 @@ namespace MAutoUpdate.Services
             }
             #endregion
 
-            var upgradeJsonFullName = context.UpgradeJsonFullName;
-            if (upgradeJsonFullName.IsNullOrEmpty())
-                throw new Exception($"请指定升级配置文件！如：-upgrade d:/1.json");
-
-            var upgradeJsonFullName1 = processPath(upgradeJsonFullName);
-            if (upgradeJsonFullName1.IsNullOrEmpty())
             {
-                throw new Exception($"升级配置文件不存在！path:{context.UpgradeJsonFullName}");
-            }
+                var oriVal = context.UpgradeJsonFullName;
+                if (oriVal.IsNullOrEmpty())
+                    throw new Exception($"请指定升级配置文件！如：-upgrade d:/1.json");
 
+                var newVal = processPath(oriVal);
+                if (newVal.IsNullOrEmpty())
+                    throw new Exception($"升级配置文件不存在！path:{oriVal}");
+
+                context.UpgradeJsonFullName = newVal;
+            }
             #region 解析升级Json
             var json = File.ReadAllText(context.UpgradeJsonFullName);
             if (json.IsNullOrWhiteSpace()) throw new Exception($"升级配置文件，内容为空！");
@@ -55,19 +56,32 @@ namespace MAutoUpdate.Services
             if (context.UpgradeInfo == null) throw new Exception($"升级配置文件，反序列化为空！");
 
             context.MainDisplayName = context.UpgradeInfo.MainAppDisplayName;
-            var mainFullName = processPath(context.UpgradeInfo.MainAppFullName);
-            if (mainFullName.IsNullOrEmpty())
-            {
-                throw new Exception($"主程序全路径不存在！path:{context.UpgradeInfo.MainAppFullName}");
-            }
-            context.MainFullName = mainFullName;
 
-            var upgradeZipFullName = processPath(context.UpgradeInfo.UpgradeZipFullName);
-            if (upgradeZipFullName.IsNullOrEmpty())
             {
-                throw new Exception($"升级压缩包全路径不存在！path:{context.UpgradeInfo.UpgradeZipFullName}");
+                var oriVal = context.UpgradeInfo.MainAppFullName;
+                if (oriVal.IsNullOrEmpty())
+                    throw new Exception($"主程序全路径不存在！path:{oriVal}");
+
+                var newVal = processPath(oriVal);
+                if (newVal.IsNullOrEmpty())
+                    throw new Exception($"主程序全路径不存在！path:{oriVal}");
+
+                context.MainFullName = newVal;
+                context.UpgradeInfo.MainAppFullName = newVal;
             }
-            context.UpgradeZipFullName = upgradeZipFullName;
+
+            {
+                var oriVal = context.UpgradeInfo.UpgradeZipFullName;
+                if (!oriVal.IsNullOrEmpty())
+                {
+                    var newVal = processPath(oriVal);
+                    if (newVal.IsNullOrEmpty())
+                        throw new Exception($"升级压缩包全路径不存在！path:{oriVal}");
+
+                    context.UpgradeZipFullName = newVal;
+                    context.UpgradeInfo.UpgradeZipFullName = newVal;
+                }
+            }
 
             #region 处理默认值
             if (context.UpgradeInfo.LastVersion.IsNullOrWhiteSpace())
@@ -75,18 +89,21 @@ namespace MAutoUpdate.Services
             if (context.UpgradeInfo.UpgradeContent.IsNullOrWhiteSpace())
                 context.UpgradeInfo.UpgradeContent = "发现新版本...";
 
-            if (context.UpgradeInfo.StartupExeFullName.IsNullOrEmpty())
             {
-                context.UpgradeInfo.StartupExeFullName = context.MainFullName;
-            }
-            else
-            {
-                var startupFullName = processPath(context.UpgradeInfo.StartupExeFullName);
-                if (startupFullName.IsNullOrEmpty())
+                var oriVal = context.UpgradeInfo.StartupExeFullName;
+                if (oriVal.IsNullOrEmpty())
                 {
-                    throw new Exception($"启动程序全路径不存在！path:{context.UpgradeInfo.StartupExeFullName}");
+                    context.UpgradeInfo.StartupExeFullName = context.MainFullName;
                 }
-                context.UpgradeInfo.StartupExeFullName = startupFullName;
+                else
+                {
+                    var newVal = processPath(oriVal);
+                    if (newVal.IsNullOrEmpty())
+                    {
+                        throw new Exception($"启动程序全路径不存在！path:{oriVal}");
+                    }
+                    context.UpgradeInfo.StartupExeFullName = newVal;
+                }
             }
             #endregion
             #endregion
@@ -118,7 +135,9 @@ namespace MAutoUpdate.Services
         }
 
         /// <summary>
-        /// 处理路径，如果是绝对路径，直接返回，如果是相对路径，则在工作目录下寻找，未找到返回null
+        /// 处理路径，
+        /// 如果路径为空，返回空
+        /// 如果是绝对路径，直接返回，如果是相对路径，则在工作目录下寻找，未找到返回null
         /// </summary>
         /// <param name="upgradeJsonFullName"></param>
         /// <returns></returns>
