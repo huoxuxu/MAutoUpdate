@@ -278,10 +278,12 @@ namespace MAutoUpdate
             LogTool.AddLog("更新程序：更新完成！");
         }
 
+
+        #region 辅助
         /// <summary>
         /// 启动主进程
         /// </summary>
-        public void StartMainApp()
+        private void StartMainApp()
         {
             var upgradeInfo = context.UpgradeInfo;
 
@@ -300,8 +302,6 @@ namespace MAutoUpdate
             }
         }
 
-
-        #region 辅助
         // 下载文件
         private void downloadByUrl(string url, string zipPath, int currentRate, int maxRate)
         {
