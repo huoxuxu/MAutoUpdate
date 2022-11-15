@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -88,7 +89,17 @@ namespace MAutoUpdate
             }
 
             // 等待主进程启动
-            Thread.Sleep(3000);
+            var startupExeName = Path.GetFileNameWithoutExtension(startupExe);
+            for (int i = 0; i < 1800; i += 300)
+            {
+                Thread.Sleep(300);
+                var pls = HTools.ProcessTools.GetProcessInfo(startupExeName);
+                if (pls?.Any() == true)
+                {
+                    // 进程已启动
+                    break;
+                }
+            }
 
             this.DialogResult = DialogResult.OK;
         }

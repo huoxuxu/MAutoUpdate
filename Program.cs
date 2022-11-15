@@ -14,6 +14,7 @@ namespace MAutoUpdate
         /// <summary>
         /// 程序主入口
         /// 启动命令：MAutoUpdate.exe -upgrade d:/upgrade.json
+        /// 启动命令2：MAutoUpdate.exe d:/upgrade.json
         /// </summary>
         /// <param name="args"></param>
         [STAThread]
